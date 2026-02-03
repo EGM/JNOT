@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="FileRenamer.Tests/FileRenamer.Tests.csproj" />
+  <Project Path="FileRenamer/FileRenamer.csproj" />
+</Solution>
