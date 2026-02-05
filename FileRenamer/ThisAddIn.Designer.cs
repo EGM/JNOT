@@ -9,8 +9,7 @@
 //------------------------------------------------------------------------------
 
 #pragma warning disable 414
-namespace FileRenamer {
-    
+namespace JNOT.FileRenamer {
     
     /// 
     [Microsoft.VisualStudio.Tools.Applications.Runtime.StartupObjectAttribute(0)]

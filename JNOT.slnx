@@ -1,4 +1,5 @@
 <Solution>
   <Project Path="FileRenamer.Tests/FileRenamer.Tests.csproj" />
-  <Project Path="FileRenamer/FileRenamer.csproj" />
+  <Project Path="FileRenamer/FileRenamer.csproj" Id="005a4591-271a-4c37-96dd-317404202848" />
+  <Project Path="Shared/UI/Shared.UI.csproj" Id="87bebfd8-e577-4b87-aef6-d9986fa43509" />
 </Solution>

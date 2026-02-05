@@ -24,16 +24,40 @@
     <ProjectGuid>{005A4591-271A-4C37-96DD-317404202848}</ProjectGuid>
     <OutputType>Library</OutputType>
     <NoStandardLibraries>false</NoStandardLibraries>
-    <RootNamespace>FileRenamer</RootNamespace>
-    <AssemblyName>FileRenamer</AssemblyName>
-    <LoadBehavior>3</LoadBehavior>
+    <RootNamespace>JNOT.FileRenamer</RootNamespace>
+    <AssemblyName>JNOT.FileRenamer</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <DefineConstants>VSTO40</DefineConstants>
-    <BootstrapperEnabled>true</BootstrapperEnabled>
-    <BootstrapperComponentsLocation>HomeSite</BootstrapperComponentsLocation>
     <ResolveComReferenceSilent>true</ResolveComReferenceSilent>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <PublishUrl>publish\</PublishUrl>
+    <InstallUrl />
+    <TargetCulture>en</TargetCulture>
+    <ApplicationVersion>1.0.0.0</ApplicationVersion>
+    <AutoIncrementApplicationRevision>true</AutoIncrementApplicationRevision>
+    <UpdateEnabled>true</UpdateEnabled>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>days</UpdateIntervalUnits>
+    <IsWebBootstrapper>False</IsWebBootstrapper>
+    <ProductName>JNOT.FileRenamer</ProductName>
+    <PublisherName />
+    <SupportUrl />
+    <FriendlyName>JNOT.FileRenamer</FriendlyName>
+    <OfficeApplicationDescription />
+    <LoadBehavior>3</LoadBehavior>
+    <LangVersion>10.0</LangVersion>
   </PropertyGroup>
   <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.8">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.8 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
     <BootstrapperPackage Include="Microsoft.VSTORuntime.4.0">
       <Visible>False</Visible>
       <ProductName>Microsoft Visual Studio 2010 Tools for Office Runtime %28x86 and x64%29</ProductName>
@@ -110,6 +134,9 @@
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Tomlyn.Signed, Version=0.20.0.0, Culture=neutral, PublicKeyToken=925c35bbd70fa682, processorArchitecture=MSIL">
+      <HintPath>..\packages\Tomlyn.Signed.0.20.0\lib\netstandard2.0\Tomlyn.Signed.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Office.Tools.v4.0.Framework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -185,6 +212,22 @@
     can be found.
   -->
   <ItemGroup>
+    <Compile Include="Business\Pattern.cs" />
+    <Compile Include="Business\PatternEngine.cs" />
+    <Compile Include="Business\RenameEngine.cs" />
+    <Compile Include="ExcelInterop\ExcelReader.cs" />
+    <Compile Include="ExcelInterop\HeaderBlock.cs" />
+    <Compile Include="ExcelInterop\ParameterBlock.cs" />
+    <Compile Include="ExcelInterop\ParamSitePair.cs" />
+    <Compile Include="ExcelInterop\PivotData.cs" />
+    <Compile Include="ExcelInterop\PivotParser.cs" />
+    <Compile Include="FileSystem\InputFolderScanner.cs" />
+    <Compile Include="FileSystem\OutputFolderWriter.cs" />
+    <Compile Include="FileSystem\SafeRenameService.cs" />
+    <Compile Include="Logging\Logger.cs" />
+    <Compile Include="Ribbon.cs" />
+    <Compile Include="RibbonMain.cs" />
+    <Compile Include="UI\RenameFilesPaneProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -197,6 +240,8 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <None Include="FileRenamer_TemporaryKey.pfx" />
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -216,11 +261,29 @@
     </Compile>
     <AppDesigner Include="Properties\" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Shared\UI\Shared.UI.csproj">
+      <Project>{87bebfd8-e577-4b87-aef6-d9986fa43509}</Project>
+      <Name>Shared.UI</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Ribbon.xml" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
   </PropertyGroup>
   <!-- Include the build rules for a C# project. -->
+  <PropertyGroup>
+    <SignManifests>true</SignManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestKeyFile>FileRenamer_TemporaryKey.pfx</ManifestKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestCertificateThumbprint>9CE08E2F13562BA71A96C40C4530BAD5778F6A3B</ManifestCertificateThumbprint>
+  </PropertyGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- Include additional build rules for an Office application add-in. -->
   <Import Project="$(VSToolsPath)\OfficeTools\Microsoft.VisualStudio.Tools.Office.targets" Condition="'$(VSToolsPath)' != ''" />
@@ -230,7 +293,7 @@
       <FlavorProperties GUID="{BAA0C2D2-18E2-41B9-852F-F413020CAA33}">
         <ProjectProperties HostName="Excel" HostPackage="{29A7B9D7-A7F1-4328-8EF0-6B2D1A56B2C1}" OfficeVersion="15.0" VstxVersion="4.0" ApplicationType="Excel" Language="cs" TemplatesPath="" DebugInfoExeName="#Software\Microsoft\Office\16.0\Excel\InstallRoot\Path#excel.exe" DebugInfoCommandLine="/x" AddItemTemplatesGuid="{51063C3A-E220-4D12-8922-BDA915ACD783}" />
         <Host Name="Excel" GeneratedCodeNamespace="FileRenamer" IconIndex="0">
-          <HostItem Name="ThisAddIn" Code="ThisAddIn.cs" CanonicalName="ThisAddIn" CanActivate="false" IconIndex="1" Blueprint="ThisAddIn.Designer.xml" GeneratedCode="ThisAddIn.Designer.cs" />
+          <HostItem Name="ThisAddIn" Code="ThisAddIn.cs" CanonicalName="AddIn" CanActivate="false" IconIndex="1" Blueprint="ThisAddIn.Designer.xml" GeneratedCode="ThisAddIn.Designer.cs" />
         </Host>
       </FlavorProperties>
     </VisualStudio>
