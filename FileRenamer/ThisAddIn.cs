@@ -1,15 +1,19 @@
-﻿using JNOT.FileRenamer.UI;
+﻿using JNOT.FileRenamer.Config;
+using JNOT.FileRenamer.UI;
+using JNOT.Shared.Config.IO;
+using JNOT.Shared.Config.Migration;
+using JNOT.Shared.Config.Services;
+using JNOT.Shared.UI;
 using Microsoft.Office.Tools.Excel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
 using System.Xml.Linq;
 using Excel = Microsoft.Office.Interop.Excel;
 using Office = Microsoft.Office.Core;
-using JNOT.Shared.UI;
-using System.Windows.Forms;
-using System.Threading.Tasks;
 
 
 namespace JNOT.FileRenamer
@@ -18,6 +22,7 @@ namespace JNOT.FileRenamer
     public partial class ThisAddIn
     {
         private Microsoft.Office.Tools.CustomTaskPane _ctp;
+        private Microsoft.Office.Tools.CustomTaskPane _configPane;
         private JnotTaskPane _pane;
 
         protected override Microsoft.Office.Core.IRibbonExtensibility CreateRibbonExtensibilityObject()
@@ -43,6 +48,30 @@ namespace JNOT.FileRenamer
             }
 
             _ctp.Visible = true;
+        }
+
+        public void ShowConfigPane()
+        {
+            if (_configPane == null)
+            {
+                var pane = new JnotTaskPane();
+                var provider = new ConfigPaneProvider(
+                    new FileRenamerConfigAdapter(
+                        new ConfigService(
+                            new ConfigLoader(new ConfigMigrationEngine()),
+                            new ConfigWriter()
+                        )
+                    )
+                );
+
+                _configPane = this.CustomTaskPanes.Add(pane, "Configuration");
+                _configPane.Width = 420;
+
+                // Load content asynchronously
+                _ = pane.LoadFromAsync(provider);
+            }
+
+            _configPane.Visible = true;
         }
 
         private void ThisAddIn_Shutdown(object sender, System.EventArgs e)

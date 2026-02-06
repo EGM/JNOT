@@ -1,5 +1,8 @@
 <Solution>
   <Project Path="FileRenamer.Tests/FileRenamer.Tests.csproj" />
   <Project Path="FileRenamer/FileRenamer.csproj" Id="005a4591-271a-4c37-96dd-317404202848" />
+  <Project Path="Shared/Config/Shared.Config.csproj" Id="6c05ad0c-d60f-4181-a021-0609884ba658" />
+  <Project Path="Shared/Config.Tests/Shared.Config.Tests.csproj" Id="beef0873-cdef-41a0-a630-fd1530ee9077" />
   <Project Path="Shared/UI/Shared.UI.csproj" Id="87bebfd8-e577-4b87-aef6-d9986fa43509" />
+  <Project Path="Shared/UI.Tests/Shared.UI.Tests.csproj" Id="6c4ec8ee-c9cb-495a-81ac-c2b22e3853c6" />
 </Solution>

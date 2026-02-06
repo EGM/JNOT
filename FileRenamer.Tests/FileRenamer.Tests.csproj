@@ -6,6 +6,7 @@
     <OutputType>Exe</OutputType>
     <RootNamespace>JNOT.FileRenamer.Tests</RootNamespace>
     <TargetFramework>net10.0</TargetFramework>
+    <LangVersion>10.0</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>

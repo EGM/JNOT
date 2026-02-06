@@ -6,11 +6,19 @@
 			<tab id="JNOT_MainTab" label="John's Nifty Office Tools">
 
 				<group id="grpFileRenamer" label="File Renamer">
+
 					<button id="btnOpenFileRenamer"
 							label="Open File Renamer"
 							size="large"
 							onAction="OpenFileRenamer_Click"
 							imageMso="FileOpen" />
+
+					<button id="btnConfig"
+							label="Configuration"
+							size="large"
+							onAction="OpenConfig_Click"
+							imageMso="HappyFace" />
+
 				</group>
 
 			</tab>
