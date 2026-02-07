@@ -7,7 +7,7 @@
 - Business\Pattern.cs
 
 ```cs
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
 namespace JNOT.FileRenamer.Business
 {
@@ -32,7 +32,7 @@ namespace JNOT.FileRenamer.Business
 - Business\PatternEngine.cs
 
 ```cs
-﻿using JNOT.FileRenamer.ExcelInterop;
+using JNOT.FileRenamer.ExcelInterop;
 using System.Linq;
 using Tomlyn;
 
@@ -210,7 +210,7 @@ namespace JNOT.FileRenamer.Business
 - Business\RenameEngine.cs
 
 ```cs
-﻿using JNOT.FileRenamer.ExcelInterop;
+using JNOT.FileRenamer.ExcelInterop;
 using JNOT.FileRenamer.FileSystem;
 using System;
 using System.IO;
@@ -241,7 +241,7 @@ namespace JNOT.FileRenamer.Business
         }
 
         // ---------------------------------------------------------
-        // MAIN RENAME ENTRY POINT
+        // MAIN RENAME ENTRY POINT (NOW WITH DRY RUN)
         // ---------------------------------------------------------
         public void Rename(
             string sourcePath,
@@ -250,13 +250,14 @@ namespace JNOT.FileRenamer.Business
             string jobNumber,
             string typeCode,
             string pdfInputFolder,
-            string pdfOutputFolder)
+            string pdfOutputFolder,
+            bool dryRun)
         {
             // Rename Excel file first
-            _renameService.Rename(sourcePath, destPath);
+            _renameService.Rename(sourcePath, destPath, dryRun);
 
             // Rename PDF in input folder
-            string? renamedPdf = RenamePdfIfExists(pdfInputFolder, data, jobNumber, typeCode);
+            string? renamedPdf = RenamePdfIfExists(pdfInputFolder, data, jobNumber, typeCode, dryRun);
 
             // If a PDF was renamed, move it to the output folder
             if (renamedPdf != null)
@@ -264,7 +265,7 @@ namespace JNOT.FileRenamer.Business
                 string finalName = Path.GetFileName(renamedPdf);
                 string finalDest = Path.Combine(pdfOutputFolder, finalName);
 
-                _renameService.Rename(renamedPdf, finalDest);
+                _renameService.Rename(renamedPdf, finalDest, dryRun);
             }
         }
 
@@ -292,9 +293,14 @@ namespace JNOT.FileRenamer.Business
         }
 
         // ---------------------------------------------------------
-        // PDF RENAME LOGIC
+        // PDF RENAME LOGIC (NOW WITH DRY RUN)
         // ---------------------------------------------------------
-        public string? RenamePdfIfExists(string folder, PivotData data, string jobNumber, string typeCode)
+        public string? RenamePdfIfExists(
+            string folder,
+            PivotData data,
+            string jobNumber,
+            string typeCode,
+            bool dryRun)
         {
             if (string.IsNullOrWhiteSpace(folder) ||
                 string.IsNullOrWhiteSpace(jobNumber))
@@ -314,9 +320,7 @@ namespace JNOT.FileRenamer.Business
                 .FirstOrDefault(f =>
                 {
                     string fileName = Path.GetFileName(f) ?? string.Empty;
-                    //return fileName.Contains(pdfKey, StringComparison.OrdinalIgnoreCase);
                     return fileName.IndexOf(pdfKey, StringComparison.OrdinalIgnoreCase) >= 0;
-
                 });
 
             if (match == null)
@@ -325,7 +329,7 @@ namespace JNOT.FileRenamer.Business
             string finalPdfName = BuildFinalPdfName(data, jobNumber, typeCode);
             string destPath = Path.Combine(folder, finalPdfName);
 
-            _renameService.Rename(match, destPath);
+            _renameService.Rename(match, destPath, dryRun);
 
             return destPath;
         }
@@ -339,7 +343,7 @@ namespace JNOT.FileRenamer.Business
 - Config\ConfigPaneProvider.cs
 
 ```cs
-﻿using JNOT.FileRenamer.Config;
+using JNOT.FileRenamer.Config;
 using JNOT.Shared.Config.IO;
 using JNOT.Shared.Config.Migration;
 using JNOT.Shared.Config.Models;
@@ -384,7 +388,7 @@ public class ConfigPaneProvider : ITaskPaneContentProvider
     {
         panel.Controls.Clear();
 
-        var lblInput = new Label { Text = "Input Folder:", AutoSize = true, Top = 10, Left = 10 };
+        var lblInput = new Label { Text = "Input Folder:", AutoSize = true, Top = 5, Left = 10 };
         var txtInput = new TextBox { Text = _cfg.InputFolder, Width = 260, Top = 30, Left = 10 };
         var btnInput = new Button { Text = "...", Width = 30, Top = 30, Left = 280 };
 
@@ -395,7 +399,7 @@ public class ConfigPaneProvider : ITaskPaneContentProvider
                 txtInput.Text = dlg.SelectedPath;
         };
 
-        var lblOutput = new Label { Text = "Output Folder:", AutoSize = true, Top = 70, Left = 10 };
+        var lblOutput = new Label { Text = "Output Folder:", AutoSize = true, Top = 65, Left = 10 };
         var txtOutput = new TextBox { Text = _cfg.OutputFolder, Width = 260, Top = 90, Left = 10 };
         var btnOutput = new Button { Text = "...", Width = 30, Top = 90, Left = 280 };
 
@@ -414,12 +418,20 @@ public class ConfigPaneProvider : ITaskPaneContentProvider
             Left = 10,
             AutoSize = true
         };
+        var chkDryRun = new CheckBox
+        {
+            Text = "Dry Run (simulate only)",
+            Checked = _cfg.DryRun,
+            Top = 160,
+            Left = 10,
+            AutoSize = true
+        };
 
         var btnSave = new Button
         {
             Text = "Save Configuration",
             Width = 150,
-            Top = 170,
+            Top = 200,
             Left = 10
         };
 
@@ -430,6 +442,7 @@ public class ConfigPaneProvider : ITaskPaneContentProvider
                 _cfg.InputFolder = txtInput.Text;
                 _cfg.OutputFolder = txtOutput.Text;
                 _cfg.Debug = chkDebug.Checked;
+                _cfg.DryRun = chkDryRun.Checked;
 
                 var svc = new ConfigService(
                     new ConfigLoader(new ConfigMigrationEngine()),
@@ -460,6 +473,7 @@ public class ConfigPaneProvider : ITaskPaneContentProvider
         panel.Controls.Add(btnOutput);
 
         panel.Controls.Add(chkDebug);
+        panel.Controls.Add(chkDryRun);
         panel.Controls.Add(btnSave);
     }
 }
@@ -468,7 +482,7 @@ public class ConfigPaneProvider : ITaskPaneContentProvider
 - Config\FileRenamerConfigAdapter.cs
 
 ```cs
-﻿using JNOT.Shared.Config.Models;
+using JNOT.Shared.Config.Models;
 using JNOT.Shared.Config.Services;
 
 namespace JNOT.FileRenamer.Config;
@@ -493,7 +507,7 @@ public class FileRenamerConfigAdapter : IFileRenamerConfigAdapter
 - Config\IFileRenamerConfigAdapter.cs
 
 ```cs
-﻿using JNOT.Shared.Config.Models;
+using JNOT.Shared.Config.Models;
 
 namespace JNOT.FileRenamer.Config;
 
@@ -509,7 +523,7 @@ public interface IFileRenamerConfigAdapter
 - ExcelInterop\ExcelReader.cs
 
 ```cs
-﻿using System;
+using System;
 using Microsoft.Office.Interop.Excel;
 
 namespace JNOT.FileRenamer.ExcelInterop
@@ -575,7 +589,7 @@ namespace JNOT.FileRenamer.ExcelInterop
 - ExcelInterop\HeaderBlock.cs
 
 ```cs
-﻿
+
 using System;
 using System.Collections.Generic;
 
@@ -642,7 +656,7 @@ namespace JNOT.FileRenamer.ExcelInterop
 - ExcelInterop\ParameterBlock.cs
 
 ```cs
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace JNOT.FileRenamer.ExcelInterop
@@ -719,7 +733,7 @@ namespace JNOT.FileRenamer.ExcelInterop
 - ExcelInterop\ParamSitePair.cs
 
 ```cs
-﻿namespace JNOT.FileRenamer.ExcelInterop
+namespace JNOT.FileRenamer.ExcelInterop
 {
     public class ParamSitePair
     {
@@ -738,7 +752,7 @@ namespace JNOT.FileRenamer.ExcelInterop
 - ExcelInterop\PivotData.cs
 
 ```cs
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
 namespace JNOT.FileRenamer.ExcelInterop
 {
@@ -785,7 +799,7 @@ namespace JNOT.FileRenamer.ExcelInterop
 - ExcelInterop\PivotParser.cs
 
 ```cs
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace JNOT.FileRenamer.ExcelInterop
@@ -843,8 +857,9 @@ namespace JNOT.FileRenamer.ExcelInterop
 - FileSystem\InputFolderScanner.cs
 
 ```cs
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace JNOT.FileRenamer.FileSystem
 {
@@ -857,10 +872,15 @@ namespace JNOT.FileRenamer.FileSystem
             if (!Directory.Exists(inputFolder))
                 return list;
 
-            foreach (var file in Directory.GetFiles(inputFolder, "*.xlsx"))
-                list.Add(file);
-
-            return list;
+            return Directory
+                .GetFiles(inputFolder, "*.xlsx")
+                .Where(f =>
+                {
+                    var name = Path.GetFileName(f);
+                    return name.EndsWith("_FLPivot.xlsx", System.StringComparison.OrdinalIgnoreCase)
+                        || name.IndexOf("_FLPivot", System.StringComparison.OrdinalIgnoreCase) >= 0;
+                })
+                .ToList();
         }
     }
 }
@@ -869,7 +889,7 @@ namespace JNOT.FileRenamer.FileSystem
 - FileSystem\OutputFolderWriter.cs
 
 ```cs
-﻿using System.IO;
+using System.IO;
 
 namespace JNOT.FileRenamer.FileSystem
 {
@@ -887,17 +907,24 @@ namespace JNOT.FileRenamer.FileSystem
 - FileSystem\SafeRenameService.cs
 
 ```cs
-﻿using System;
+using System;
 using System.IO;
 
 namespace JNOT.FileRenamer.FileSystem
 {
     public class SafeRenameService
     {
-        public void Rename(string sourcePath, string destPath)
+        public void Rename(string sourcePath, string destPath, bool dryRun)
         {
             if (!File.Exists(sourcePath))
                 return;
+
+            // DRY RUN — simulate only
+            if (dryRun)
+            {
+                // No file operations — caller logs the message
+                return;
+            }
 
             if (File.Exists(destPath))
                 File.Delete(destPath);
@@ -905,13 +932,13 @@ namespace JNOT.FileRenamer.FileSystem
             File.Move(sourcePath, destPath);
         }
 
-        public void RenamePdfIfExists(string sourceXlsx, string destXlsx)
+        public void RenamePdfIfExists(string sourceXlsx, string destXlsx, bool dryRun)
         {
             string srcPdf = Path.ChangeExtension(sourceXlsx, ".pdf");
             string dstPdf = Path.ChangeExtension(destXlsx, ".pdf");
 
             if (File.Exists(srcPdf))
-                Rename(srcPdf, dstPdf);
+                Rename(srcPdf, dstPdf, dryRun);
         }
     }
 }
@@ -923,7 +950,7 @@ namespace JNOT.FileRenamer.FileSystem
 - Logging\Logger.cs
 
 ```cs
-﻿using System;
+using System;
 using System.IO;
 
 namespace JNOT.FileRenamer.Logging
@@ -955,7 +982,7 @@ namespace JNOT.FileRenamer.Logging
 - Properties\AssemblyInfo.cs
 
 ```cs
-﻿using System.Reflection;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Security;
@@ -999,7 +1026,7 @@ using System.Security;
 - Properties\Resources.Designer.cs
 
 ```cs
-﻿//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // <auto-generated>
 //     This code was generated by a tool.
 //     Runtime Version:4.0.30319.42000
@@ -1068,7 +1095,7 @@ namespace FileRenamer.Properties {
 - Properties\Settings.Designer.cs
 
 ```cs
-﻿//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // <auto-generated>
 //     This code was generated by a tool.
 //     Runtime Version:4.0.30319.42000
@@ -1102,7 +1129,7 @@ namespace FileRenamer.Properties {
 - RibbonMain.cs
 
 ```cs
-﻿using System;
+using System;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -1168,7 +1195,8 @@ namespace JNOT.FileRenamer
 - ThisAddIn.cs
 
 ```cs
-﻿using JNOT.FileRenamer.Config;
+using JNOT.FileRenamer.Config;
+using JNOT.FileRenamer.Logging;
 using JNOT.FileRenamer.UI;
 using JNOT.Shared.Config.IO;
 using JNOT.Shared.Config.Migration;
@@ -1193,6 +1221,8 @@ namespace JNOT.FileRenamer
     {
         private Microsoft.Office.Tools.CustomTaskPane _ctp;
         private Microsoft.Office.Tools.CustomTaskPane _configPane;
+        private IFileRenamerConfigAdapter _adapter;
+        private Logger _logger;
         private JnotTaskPane _pane;
 
         protected override Microsoft.Office.Core.IRibbonExtensibility CreateRibbonExtensibilityObject()
@@ -1202,19 +1232,44 @@ namespace JNOT.FileRenamer
 
         private void ThisAddIn_Startup(object sender, System.EventArgs e)
         {
+            var configService = new ConfigService(
+                new ConfigLoader(new ConfigMigrationEngine()),
+                new ConfigWriter()
+            );
+
+            _adapter = new FileRenamerConfigAdapter(configService);
+            _logger = new Logger(_adapter.GetConfig().OutputFolder);
+            var provider = new FileRenamerPaneProvider(_adapter, _logger);
+
+            var paneControl = new JnotTaskPane();
+
+            // Load the provider into the pane
+            // (fire and forget is fine here because PopulateAsync is UI-safe)
+            _ = paneControl.LoadFromAsync(provider);
+
+            // Add to VSTO task panes
+            Globals.ThisAddIn.CustomTaskPanes.Add(
+                paneControl,
+                "File Renamer"
+            );
         }
 
-        public void ShowFileRenamerPane()
+        public async void ShowFileRenamerPane()
         {
+            var provider = new FileRenamerPaneProvider(_adapter, _logger);
+
             if (_ctp == null)
             {
-                var provider = new RenameFilesPaneProvider();
-
                 _pane = new JnotTaskPane();
-                _pane.LoadFromAsync(provider);
+                await _pane.LoadFromAsync(provider);
 
-                _ctp = this.CustomTaskPanes.Add(_pane, provider.Title);
+                _ctp = this.CustomTaskPanes.Add(_pane, "File Renamer");
                 _ctp.Width = 400;
+            }
+            else
+            {
+                // Refresh the pane with updated config
+                await _pane.LoadFromAsync(provider);
             }
 
             _ctp.Visible = true;
@@ -1269,7 +1324,7 @@ namespace JNOT.FileRenamer
 - ThisAddIn.Designer.cs
 
 ```cs
-﻿//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // <auto-generated>
 //     This code was generated by a tool.
 //     Runtime Version:4.0.30319.42000
@@ -1512,32 +1567,324 @@ namespace JNOT.FileRenamer {
 
 ## 📁 Directory: UI
 
-- UI\RenameFilesPaneProvider.cs
+- UI\FileRenamerPaneProvider.cs
 
 ```cs
-﻿using System.Threading.Tasks;
-using System.Windows.Forms;
+using JNOT.FileRenamer.Business;
+using JNOT.FileRenamer.Config;
+using JNOT.FileRenamer.ExcelInterop;
+using JNOT.FileRenamer.FileSystem;
+using JNOT.FileRenamer.Logging;
+using JNOT.Shared.Config.Models;
 using JNOT.Shared.UI;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace JNOT.FileRenamer.UI
 {
-    public class RenameFilesPaneProvider : ITaskPaneContentProvider
+    public class FileRenamerPaneProvider : ITaskPaneContentProvider
     {
-        public string Title => "Rename Files";
-        public string Status => "Ready";
+        private readonly IFileRenamerConfigAdapter _configAdapter;
+        private readonly Logger _logger;
 
-        public async Task PopulateAsync(Panel contentPanel)
+        public string Title => "File Renamer";
+        public string Status => "Ready to rename files";
+
+        public FileRenamerPaneProvider(IFileRenamerConfigAdapter configAdapter, Logger logger)
         {
-            var label = new Label
+            _configAdapter = configAdapter;
+            _logger = logger;
+        }
+
+        public Task PopulateAsync(Panel panel)
+        {
+            if (panel.InvokeRequired)
             {
-                Text = "This is RenameFiles content",
-                AutoSize = true
+                panel.BeginInvoke(new Action(() => BuildUI(panel)));
+            }
+            else
+            {
+                BuildUI(panel);
+            }
+
+            return Task.CompletedTask;
+        }
+
+        private void BuildUI(Panel panel)
+        {
+            panel.Controls.Clear();
+
+            var cfg = _configAdapter.GetConfig();
+
+            // -----------------------------
+            // Input Folder (read-only)
+            // -----------------------------
+            var lblInput = new Label
+            {
+                Text = "Input Folder:",
+                AutoSize = true,
+                Top = 10,
+                Left = 10
             };
 
-            contentPanel.Controls.Add(label);
+            var txtInput = new TextBox
+            {
+                Text = cfg.InputFolder,
+                Width = 350,
+                Top = 30,
+                Left = 10,
+                ReadOnly = true
+            };
 
-            // Nothing async to do yet, but we satisfy the signature
-            await Task.CompletedTask;
+            // -----------------------------
+            // Output Folder (read-only)
+            // -----------------------------
+            var lblOutput = new Label
+            {
+                Text = "Output Folder:",
+                AutoSize = true,
+                Top = 70,
+                Left = 10
+            };
+
+            var txtOutput = new TextBox
+            {
+                Text = cfg.OutputFolder,
+                Width = 350,
+                Top = 90,
+                Left = 10,
+                ReadOnly = true
+            };
+
+            // -----------------------------
+            // Run Button
+            // -----------------------------
+            var btnRun = new Button
+            {
+                Text = "Run",
+                Width = 120,
+                Top = 130,
+                Left = 10
+            };
+
+            // -----------------------------
+            // Log Output
+            // -----------------------------
+            var txtLog = new TextBox
+            {
+                Multiline = true,
+                ScrollBars = ScrollBars.Vertical,
+                Width = 450,
+                Height = 300,
+                Top = 170,
+                Left = 10
+            };
+
+            // -----------------------------
+            // Run Button Click Handler
+            // -----------------------------
+            btnRun.Click += (s, e) =>
+            {
+                btnRun.Enabled = false;
+                txtLog.Clear();
+
+                try
+                {
+                    RunRenamePipeline(cfg, txtLog);
+                }
+                catch (Exception ex)
+                {
+                    txtLog.AppendText($"ERROR: {ex.Message}{Environment.NewLine}");
+                    _logger.Log($"ERROR: {ex.Message}");
+                }
+                finally
+                {
+                    btnRun.Enabled = true;
+                }
+            };
+
+            // -----------------------------
+            // Add Controls
+            // -----------------------------
+            panel.Controls.Add(lblInput);
+            panel.Controls.Add(txtInput);
+
+            panel.Controls.Add(lblOutput);
+            panel.Controls.Add(txtOutput);
+
+            panel.Controls.Add(btnRun);
+            panel.Controls.Add(txtLog);
+        }
+        private void RunRenamePipeline(FileRenamerConfig cfg, TextBox log)
+        {
+            var scanner = new InputFolderScanner();
+            var excelReader = new ExcelReader();
+            var patternEngine = new PatternEngine();
+            var renameService = new SafeRenameService();
+            var renameEngine = new RenameEngine(patternEngine, renameService);
+            var outputWriter = new OutputFolderWriter();
+
+            var files = scanner.Scan(cfg.InputFolder);
+
+            if (!files.Any())
+            {
+                log.AppendText("No .xlsx files found in input folder." + Environment.NewLine);
+                _logger.Log("No .xlsx files found in input folder.");
+                return;
+            }
+
+            // ---------------------------------------------------------
+            // DRY RUN BANNER
+            // ---------------------------------------------------------
+            if (cfg.DryRun)
+            {
+                log.AppendText("DRY RUN MODE — No files will be modified." + Environment.NewLine);
+                _logger.Log("DRY RUN MODE — No files will be modified.");
+            }
+
+            log.AppendText($"Found {files.Count} file(s). Starting rename..." + Environment.NewLine);
+            _logger.Log($"Found {files.Count} file(s). Starting rename...");
+
+            int index = 0;
+            foreach (var file in files)
+            {
+                index++;
+                string header = $"[{index}/{files.Count}] Processing: {file}";
+                log.AppendText(header + Environment.NewLine);
+                _logger.Log(header);
+
+                try
+                {
+                    var pivot = excelReader.ReadPivot(file);
+                    var typeCode = patternEngine.ResolveTypeCode(pivot);
+
+                    string finalExcelName = renameEngine.BuildFinalName(pivot);
+                    string destExcelPath = outputWriter.BuildOutputPath(cfg.OutputFolder, finalExcelName);
+
+                    // ---------------------------------------------------------
+                    // DRY RUN — Excel rename simulation
+                    // ---------------------------------------------------------
+                    if (cfg.DryRun)
+                    {
+                        string msg = $"DRY RUN → Would rename: {file} → {destExcelPath}";
+                        log.AppendText(msg + Environment.NewLine);
+                        _logger.Log(msg);
+                    }
+
+                    // ---------------------------------------------------------
+                    // Perform rename (or simulate, depending on DryRun)
+                    // ---------------------------------------------------------
+                    renameEngine.Rename(
+                        sourcePath: file,
+                        destPath: destExcelPath,
+                        data: pivot,
+                        jobNumber: pivot.JobNumberRaw,
+                        typeCode: typeCode,
+                        pdfInputFolder: cfg.InputFolder,
+                        pdfOutputFolder: cfg.OutputFolder,
+                        dryRun: cfg.DryRun
+                    );
+
+                    // ---------------------------------------------------------
+                    // DRY RUN — PDF rename simulation
+                    // ---------------------------------------------------------
+                    if (cfg.DryRun)
+                    {
+                        string pdfKey = pivot.JobNumberRaw;
+                        string msg = $"DRY RUN → Would rename matching PDF for job {pdfKey} (if found)";
+                        log.AppendText(msg + Environment.NewLine);
+                        _logger.Log(msg);
+                    }
+
+                    // ---------------------------------------------------------
+                    // Real-run success message
+                    // ---------------------------------------------------------
+                    if (!cfg.DryRun)
+                    {
+                        string successMsg = $"SUCCESS → {finalExcelName}";
+                        log.AppendText(successMsg + Environment.NewLine);
+                        _logger.Log(successMsg);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    string errorMsg = $"ERROR → {ex.Message}";
+                    log.AppendText(errorMsg + Environment.NewLine);
+                    _logger.Log(errorMsg);
+                }
+
+                log.AppendText(Environment.NewLine);
+            }
+
+            log.AppendText("Rename operation completed." + Environment.NewLine);
+            _logger.Log("Rename operation completed.");
+        }
+        private void oldRunRenamePipeline(FileRenamerConfig cfg, TextBox log)
+        {
+            var scanner = new InputFolderScanner();
+            var excelReader = new ExcelReader();
+            var patternEngine = new PatternEngine();
+            var renameService = new SafeRenameService();
+            var renameEngine = new RenameEngine(patternEngine, renameService);
+            var outputWriter = new OutputFolderWriter();
+
+            var files = scanner.Scan(cfg.InputFolder);
+
+            if (!files.Any())
+            {
+                log.AppendText("No .xlsx files found in input folder." + Environment.NewLine);
+                _logger.Log("No .xlsx files found in input folder.");
+                return;
+            }
+
+            log.AppendText($"Found {files.Count} file(s). Starting rename..." + Environment.NewLine);
+            _logger.Log($"Found {files.Count} file(s). Starting rename...");
+
+            int index = 0;
+            foreach (var file in files)
+            {
+                index++;
+                string header = $"[{index}/{files.Count}] Processing: {file}";
+                log.AppendText(header + Environment.NewLine);
+                _logger.Log(header);
+
+                try
+                {
+                    var pivot = excelReader.ReadPivot(file);
+                    var typeCode = patternEngine.ResolveTypeCode(pivot);
+
+                    string finalExcelName = renameEngine.BuildFinalName(pivot);
+                    string destExcelPath = outputWriter.BuildOutputPath(cfg.OutputFolder, finalExcelName);
+
+                    renameEngine.Rename(
+                        sourcePath: file,
+                        destPath: destExcelPath,
+                        data: pivot,
+                        jobNumber: pivot.JobNumberRaw,
+                        typeCode: typeCode,
+                        pdfInputFolder: cfg.InputFolder,
+                        pdfOutputFolder: cfg.OutputFolder,
+                        dryRun: cfg.DryRun
+                    );
+
+                    string successMsg = $"SUCCESS → {finalExcelName}";
+                    log.AppendText(successMsg + Environment.NewLine);
+                    _logger.Log(successMsg);
+                }
+                catch (Exception ex)
+                {
+                    string errorMsg = $"ERROR → {ex.Message}";
+                    log.AppendText(errorMsg + Environment.NewLine);
+                    _logger.Log(errorMsg);
+                }
+
+                log.AppendText(Environment.NewLine);
+            }
+
+            log.AppendText("Rename operation completed." + Environment.NewLine);
+            _logger.Log("Rename operation completed.");
         }
     }
 }

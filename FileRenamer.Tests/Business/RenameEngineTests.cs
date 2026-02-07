@@ -110,7 +110,7 @@ namespace JNOT.FileRenamer.Tests.Business
 
             var data = new PivotData { SampleDateRaw = "2026-01-04" };
 
-            engine.RenamePdfIfExists(folder, data, "762-8172-1", "S");
+            engine.RenamePdfIfExists(folder, data, "762-8172-1", "S", dryRun: false);
 
             Assert.True(File.Exists(Path.Combine(folder, "2026-01-04 Lab EF Sun J8172-1.pdf")));
         }
@@ -129,10 +129,10 @@ namespace JNOT.FileRenamer.Tests.Business
 
             var data = new PivotData { SampleDateRaw = "2026-01-22" };
 
-            engine.RenamePdfIfExists(folder, data, "762-7935-2", "W");
+            engine.RenamePdfIfExists(folder, data, "762-7935-2", "W", dryRun: false);
 
             Assert.True(File.Exists(Path.Combine(folder, "2026-01-22 Lab EF Weekly J7935-2.pdf")));
-            Assert.True(File.Exists(Path.Combine(folder, "J1111-1.pdf")));
+            Assert.True(File.Exists(Path.Combine(folder, "J1111-1.pdf"))); // untouched
         }
 
         [Fact]
@@ -149,7 +149,7 @@ namespace JNOT.FileRenamer.Tests.Business
 
             var data = new PivotData { SampleDateRaw = "2026-01-06" };
 
-            engine.RenamePdfIfExists(folder, data, "762-8123-1", "S");
+            engine.RenamePdfIfExists(folder, data, "762-8123-1", "S", dryRun: false);
 
             // No file should be renamed
             Assert.True(File.Exists(Path.Combine(folder, "J9999-1.pdf")));

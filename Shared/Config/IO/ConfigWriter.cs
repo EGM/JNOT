@@ -35,6 +35,7 @@ public class ConfigWriter
         frSection["input_folder"] = config.FileRenamer.InputFolder;
         frSection["output_folder"] = config.FileRenamer.OutputFolder;
         frSection["debug"] = config.FileRenamer.Debug;
+        frSection["dry_run"] = config.FileRenamer.DryRun;
 
         var text = Toml.FromModel(root);
         Directory.CreateDirectory(Path.GetDirectoryName(path)!);

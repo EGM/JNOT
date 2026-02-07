@@ -1,4 +1,5 @@
 ﻿using JNOT.FileRenamer.Config;
+using JNOT.FileRenamer.Logging;
 using JNOT.FileRenamer.UI;
 using JNOT.Shared.Config.IO;
 using JNOT.Shared.Config.Migration;
@@ -23,6 +24,8 @@ namespace JNOT.FileRenamer
     {
         private Microsoft.Office.Tools.CustomTaskPane _ctp;
         private Microsoft.Office.Tools.CustomTaskPane _configPane;
+        private IFileRenamerConfigAdapter _adapter;
+        private Logger _logger;
         private JnotTaskPane _pane;
 
         protected override Microsoft.Office.Core.IRibbonExtensibility CreateRibbonExtensibilityObject()
@@ -32,19 +35,44 @@ namespace JNOT.FileRenamer
 
         private void ThisAddIn_Startup(object sender, System.EventArgs e)
         {
+            var configService = new ConfigService(
+                new ConfigLoader(new ConfigMigrationEngine()),
+                new ConfigWriter()
+            );
+
+            _adapter = new FileRenamerConfigAdapter(configService);
+            _logger = new Logger(_adapter.GetConfig().OutputFolder);
+            var provider = new FileRenamerPaneProvider(_adapter, _logger);
+
+            var paneControl = new JnotTaskPane();
+
+            // Load the provider into the pane
+            // (fire and forget is fine here because PopulateAsync is UI-safe)
+            _ = paneControl.LoadFromAsync(provider);
+
+            // Add to VSTO task panes
+            Globals.ThisAddIn.CustomTaskPanes.Add(
+                paneControl,
+                "File Renamer"
+            );
         }
 
-        public void ShowFileRenamerPane()
+        public async void ShowFileRenamerPane()
         {
+            var provider = new FileRenamerPaneProvider(_adapter, _logger);
+
             if (_ctp == null)
             {
-                var provider = new RenameFilesPaneProvider();
-
                 _pane = new JnotTaskPane();
-                _pane.LoadFromAsync(provider);
+                await _pane.LoadFromAsync(provider);
 
-                _ctp = this.CustomTaskPanes.Add(_pane, provider.Title);
+                _ctp = this.CustomTaskPanes.Add(_pane, "File Renamer");
                 _ctp.Width = 400;
+            }
+            else
+            {
+                // Refresh the pane with updated config
+                await _pane.LoadFromAsync(provider);
             }
 
             _ctp.Visible = true;

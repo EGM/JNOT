@@ -229,7 +229,7 @@
     <Compile Include="FileSystem\SafeRenameService.cs" />
     <Compile Include="Logging\Logger.cs" />
     <Compile Include="RibbonMain.cs" />
-    <Compile Include="UI\RenameFilesPaneProvider.cs" />
+    <Compile Include="UI\FileRenamerPaneProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

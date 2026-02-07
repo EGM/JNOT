@@ -4,7 +4,7 @@
 - ConfigLoaderTests.cs
 
 ```cs
-﻿using Xunit;
+using Xunit;
 using JNOT.Shared.Config.IO;
 using JNOT.Shared.Config.Migration;
 using JNOT.Shared.Config.Models;
@@ -96,7 +96,7 @@ output_folder = ""B""
 - ConfigServiceTests.cs
 
 ```cs
-﻿using Xunit;
+using Xunit;
 using JNOT.Shared.Config.Services;
 using JNOT.Shared.Config.IO;
 using JNOT.Shared.Config.Migration;
@@ -144,7 +144,7 @@ public class ConfigServiceTests
 - ConfigWriterTests.cs
 
 ```cs
-﻿using Xunit;
+using Xunit;
 using JNOT.Shared.Config.IO;
 using JNOT.Shared.Config.Models;
 using System.IO;
@@ -213,7 +213,7 @@ foo = ""bar""
 - TestHelpers\TempFile.cs
 
 ```cs
-﻿using System;
+using System;
 using System.IO;
 
 namespace JNOT.Shared.Config.Tests.TestHelpers;
@@ -238,7 +238,7 @@ public sealed class TempFile : IDisposable
 - TestHelpers\TestConfigMigrationStep.cs
 
 ```cs
-﻿using JNOT.Shared.Config.Models;
+using JNOT.Shared.Config.Models;
 using JNOT.Shared.Config.Migration;
 
 namespace JNOT.Shared.Config.Tests.TestHelpers;

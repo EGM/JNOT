@@ -29,7 +29,7 @@ namespace JNOT.FileRenamer.Business
         }
 
         // ---------------------------------------------------------
-        // MAIN RENAME ENTRY POINT
+        // MAIN RENAME ENTRY POINT (NOW WITH DRY RUN)
         // ---------------------------------------------------------
         public void Rename(
             string sourcePath,
@@ -38,13 +38,14 @@ namespace JNOT.FileRenamer.Business
             string jobNumber,
             string typeCode,
             string pdfInputFolder,
-            string pdfOutputFolder)
+            string pdfOutputFolder,
+            bool dryRun)
         {
             // Rename Excel file first
-            _renameService.Rename(sourcePath, destPath);
+            _renameService.Rename(sourcePath, destPath, dryRun);
 
             // Rename PDF in input folder
-            string? renamedPdf = RenamePdfIfExists(pdfInputFolder, data, jobNumber, typeCode);
+            string? renamedPdf = RenamePdfIfExists(pdfInputFolder, data, jobNumber, typeCode, dryRun);
 
             // If a PDF was renamed, move it to the output folder
             if (renamedPdf != null)
@@ -52,7 +53,7 @@ namespace JNOT.FileRenamer.Business
                 string finalName = Path.GetFileName(renamedPdf);
                 string finalDest = Path.Combine(pdfOutputFolder, finalName);
 
-                _renameService.Rename(renamedPdf, finalDest);
+                _renameService.Rename(renamedPdf, finalDest, dryRun);
             }
         }
 
@@ -80,9 +81,14 @@ namespace JNOT.FileRenamer.Business
         }
 
         // ---------------------------------------------------------
-        // PDF RENAME LOGIC
+        // PDF RENAME LOGIC (NOW WITH DRY RUN)
         // ---------------------------------------------------------
-        public string? RenamePdfIfExists(string folder, PivotData data, string jobNumber, string typeCode)
+        public string? RenamePdfIfExists(
+            string folder,
+            PivotData data,
+            string jobNumber,
+            string typeCode,
+            bool dryRun)
         {
             if (string.IsNullOrWhiteSpace(folder) ||
                 string.IsNullOrWhiteSpace(jobNumber))
@@ -102,9 +108,7 @@ namespace JNOT.FileRenamer.Business
                 .FirstOrDefault(f =>
                 {
                     string fileName = Path.GetFileName(f) ?? string.Empty;
-                    //return fileName.Contains(pdfKey, StringComparison.OrdinalIgnoreCase);
                     return fileName.IndexOf(pdfKey, StringComparison.OrdinalIgnoreCase) >= 0;
-
                 });
 
             if (match == null)
@@ -113,7 +117,7 @@ namespace JNOT.FileRenamer.Business
             string finalPdfName = BuildFinalPdfName(data, jobNumber, typeCode);
             string destPath = Path.Combine(folder, finalPdfName);
 
-            _renameService.Rename(match, destPath);
+            _renameService.Rename(match, destPath, dryRun);
 
             return destPath;
         }

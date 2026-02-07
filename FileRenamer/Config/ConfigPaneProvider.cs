@@ -43,7 +43,7 @@ public class ConfigPaneProvider : ITaskPaneContentProvider
     {
         panel.Controls.Clear();
 
-        var lblInput = new Label { Text = "Input Folder:", AutoSize = true, Top = 10, Left = 10 };
+        var lblInput = new Label { Text = "Input Folder:", AutoSize = true, Top = 5, Left = 10 };
         var txtInput = new TextBox { Text = _cfg.InputFolder, Width = 260, Top = 30, Left = 10 };
         var btnInput = new Button { Text = "...", Width = 30, Top = 30, Left = 280 };
 
@@ -54,7 +54,7 @@ public class ConfigPaneProvider : ITaskPaneContentProvider
                 txtInput.Text = dlg.SelectedPath;
         };
 
-        var lblOutput = new Label { Text = "Output Folder:", AutoSize = true, Top = 70, Left = 10 };
+        var lblOutput = new Label { Text = "Output Folder:", AutoSize = true, Top = 65, Left = 10 };
         var txtOutput = new TextBox { Text = _cfg.OutputFolder, Width = 260, Top = 90, Left = 10 };
         var btnOutput = new Button { Text = "...", Width = 30, Top = 90, Left = 280 };
 
@@ -73,12 +73,20 @@ public class ConfigPaneProvider : ITaskPaneContentProvider
             Left = 10,
             AutoSize = true
         };
+        var chkDryRun = new CheckBox
+        {
+            Text = "Dry Run (simulate only)",
+            Checked = _cfg.DryRun,
+            Top = 160,
+            Left = 10,
+            AutoSize = true
+        };
 
         var btnSave = new Button
         {
             Text = "Save Configuration",
             Width = 150,
-            Top = 170,
+            Top = 200,
             Left = 10
         };
 
@@ -89,6 +97,7 @@ public class ConfigPaneProvider : ITaskPaneContentProvider
                 _cfg.InputFolder = txtInput.Text;
                 _cfg.OutputFolder = txtOutput.Text;
                 _cfg.Debug = chkDebug.Checked;
+                _cfg.DryRun = chkDryRun.Checked;
 
                 var svc = new ConfigService(
                     new ConfigLoader(new ConfigMigrationEngine()),
@@ -119,6 +128,7 @@ public class ConfigPaneProvider : ITaskPaneContentProvider
         panel.Controls.Add(btnOutput);
 
         panel.Controls.Add(chkDebug);
+        panel.Controls.Add(chkDryRun);
         panel.Controls.Add(btnSave);
     }
 }

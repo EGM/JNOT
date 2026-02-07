@@ -4,7 +4,7 @@
 - ITaskPaneContentProvider.cs
 
 ```cs
-﻿using System.Reflection.Emit;
+using System.Reflection.Emit;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -26,7 +26,7 @@ namespace JNOT.Shared.UI
 - JnotTaskPane.cs
 
 ```cs
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -94,7 +94,7 @@ namespace JNOT.Shared.UI
 - Properties\AssemblyInfo.cs
 
 ```cs
-﻿using System.Reflection;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 

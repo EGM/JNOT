@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace JNOT.FileRenamer.FileSystem
 {
@@ -12,10 +13,15 @@ namespace JNOT.FileRenamer.FileSystem
             if (!Directory.Exists(inputFolder))
                 return list;
 
-            foreach (var file in Directory.GetFiles(inputFolder, "*.xlsx"))
-                list.Add(file);
-
-            return list;
+            return Directory
+                .GetFiles(inputFolder, "*.xlsx")
+                .Where(f =>
+                {
+                    var name = Path.GetFileName(f);
+                    return name.EndsWith("_FLPivot.xlsx", System.StringComparison.OrdinalIgnoreCase)
+                        || name.IndexOf("_FLPivot", System.StringComparison.OrdinalIgnoreCase) >= 0;
+                })
+                .ToList();
         }
     }
 }

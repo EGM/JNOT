@@ -5,10 +5,17 @@ namespace JNOT.FileRenamer.FileSystem
 {
     public class SafeRenameService
     {
-        public void Rename(string sourcePath, string destPath)
+        public void Rename(string sourcePath, string destPath, bool dryRun)
         {
             if (!File.Exists(sourcePath))
                 return;
+
+            // DRY RUN — simulate only
+            if (dryRun)
+            {
+                // No file operations — caller logs the message
+                return;
+            }
 
             if (File.Exists(destPath))
                 File.Delete(destPath);
@@ -16,13 +23,13 @@ namespace JNOT.FileRenamer.FileSystem
             File.Move(sourcePath, destPath);
         }
 
-        public void RenamePdfIfExists(string sourceXlsx, string destXlsx)
+        public void RenamePdfIfExists(string sourceXlsx, string destXlsx, bool dryRun)
         {
             string srcPdf = Path.ChangeExtension(sourceXlsx, ".pdf");
             string dstPdf = Path.ChangeExtension(destXlsx, ".pdf");
 
             if (File.Exists(srcPdf))
-                Rename(srcPdf, dstPdf);
+                Rename(srcPdf, dstPdf, dryRun);
         }
     }
 }

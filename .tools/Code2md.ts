@@ -6,6 +6,10 @@ import { basename } from "@std/path/basename";
 
 const root = "C:/Users/John/source/repos/JNOT";
 
+function stripBom(text: string): string {
+  return text.replace(/^\uFEFF/, "");
+}
+
 async function main() {
   const projectFolders = new Map<string, string>(); // name -> full path
 
@@ -55,7 +59,8 @@ async function main() {
       chunks.push(`- ${relPath}`);
 
       if (entry.path.endsWith(".cs")) {
-        const text = await Deno.readTextFile(entry.path);
+        let text = await Deno.readTextFile(entry.path);
+        text = stripBom(text);
         chunks.push("\n```cs");
         chunks.push(text);
         chunks.push("```\n");

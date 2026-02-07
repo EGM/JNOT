@@ -7,7 +7,7 @@
 - Defaults\ConfigDefaults.cs
 
 ```cs
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -47,7 +47,7 @@ namespace JNOT.Shared.Config.Defaults
 - IO\ConfigFileLocator.cs
 
 ```cs
-﻿using System;
+using System;
 using System.IO;
 
 namespace JNOT.Shared.Config.IO
@@ -70,7 +70,7 @@ namespace JNOT.Shared.Config.IO
 - IO\ConfigLoader.cs
 
 ```cs
-﻿using System.IO;
+using System.IO;
 using JNOT.Shared.Config.Models;
 using JNOT.Shared.Config.Defaults;
 using JNOT.Shared.Config.Migration;
@@ -126,7 +126,8 @@ namespace JNOT.Shared.Config.IO
             {
                 InputFolder = ReadString(section, "input_folder", ""),
                 OutputFolder = ReadString(section, "output_folder", ""),
-                Debug = ReadBool(section, "debug", false)
+                Debug = ReadBool(section, "debug", false),
+                DryRun = ReadBool(section, "dry_run", true)
             };
         }
 
@@ -160,7 +161,7 @@ namespace JNOT.Shared.Config.IO
 - IO\ConfigWriter.cs
 
 ```cs
-﻿using System.IO;
+using System.IO;
 using JNOT.Shared.Config.Models;
 using Tomlyn;
 using Tomlyn.Model;
@@ -197,6 +198,7 @@ public class ConfigWriter
         frSection["input_folder"] = config.FileRenamer.InputFolder;
         frSection["output_folder"] = config.FileRenamer.OutputFolder;
         frSection["debug"] = config.FileRenamer.Debug;
+        frSection["dry_run"] = config.FileRenamer.DryRun;
 
         var text = Toml.FromModel(root);
         Directory.CreateDirectory(Path.GetDirectoryName(path)!);
@@ -211,7 +213,7 @@ public class ConfigWriter
 - Migration\ConfigMigrationEngine.cs
 
 ```cs
-﻿using JNOT.Shared.Config.Defaults;
+using JNOT.Shared.Config.Defaults;
 using JNOT.Shared.Config.Migration;
 using JNOT.Shared.Config.Models;
 using System;
@@ -253,7 +255,7 @@ public class ConfigMigrationEngine
 - Migration\IConfigMigrationStep.cs
 
 ```cs
-﻿using JNOT.Shared.Config.Models;
+using JNOT.Shared.Config.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -278,7 +280,7 @@ namespace JNOT.Shared.Config.Migration
 - Models\FileRenamerConfig.cs
 
 ```cs
-﻿
+
 namespace JNOT.Shared.Config.Models
 {
     public class FileRenamerConfig
@@ -286,6 +288,7 @@ namespace JNOT.Shared.Config.Models
         public string InputFolder { get; set; } = "";
         public string OutputFolder { get; set; } = "";
         public bool Debug { get; set; } = false;
+        public bool DryRun { get; set; } = false;
     }
 }
 ```
@@ -293,7 +296,7 @@ namespace JNOT.Shared.Config.Models
 - Models\RootConfig.cs
 
 ```cs
-﻿
+
 namespace JNOT.Shared.Config.Models
 {
     public class RootConfig
@@ -314,7 +317,7 @@ namespace JNOT.Shared.Config.Models
 - Properties\AssemblyInfo.cs
 
 ```cs
-﻿using System.Reflection;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
@@ -356,7 +359,7 @@ using System.Runtime.InteropServices;
 - Services\ConfigService.cs
 
 ```cs
-﻿using JNOT.Shared.Config.IO;
+using JNOT.Shared.Config.IO;
 using JNOT.Shared.Config.Models;
 using JNOT.Shared.Config.Validation;
 using System;
@@ -403,7 +406,7 @@ public class ConfigService : IConfigService
 - Services\IConfigService.cs
 
 ```cs
-﻿using JNOT.Shared.Config.Models;
+using JNOT.Shared.Config.Models;
 
 namespace JNOT.Shared.Config.Services;
 
@@ -422,7 +425,7 @@ public interface IConfigService
 - Validation\ConfigValidationResult.cs
 
 ```cs
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -442,7 +445,7 @@ namespace JNOT.Shared.Config.Validation
 - Validation\ConfigValidator.cs
 
 ```cs
-﻿using JNOT.Shared.Config.Models;
+using JNOT.Shared.Config.Models;
 
 namespace JNOT.Shared.Config.Validation
 {
