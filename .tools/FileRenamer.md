@@ -426,12 +426,20 @@ public class ConfigPaneProvider : ITaskPaneContentProvider
             Left = 10,
             AutoSize = true
         };
+        var chkClearOnRun = new CheckBox
+        {
+            Text = "Clear On Run",
+            Checked = _cfg.ClearOnRun,
+            Top = 190,
+            Left = 10,
+            AutoSize = true
+        };
 
         var btnSave = new Button
         {
             Text = "Save Configuration",
             Width = 150,
-            Top = 200,
+            Top = 230,
             Left = 10
         };
 
@@ -443,6 +451,7 @@ public class ConfigPaneProvider : ITaskPaneContentProvider
                 _cfg.OutputFolder = txtOutput.Text;
                 _cfg.Debug = chkDebug.Checked;
                 _cfg.DryRun = chkDryRun.Checked;
+                _cfg.ClearOnRun = chkClearOnRun.Checked;
 
                 var svc = new ConfigService(
                     new ConfigLoader(new ConfigMigrationEngine()),
@@ -474,6 +483,7 @@ public class ConfigPaneProvider : ITaskPaneContentProvider
 
         panel.Controls.Add(chkDebug);
         panel.Controls.Add(chkDryRun);
+        panel.Controls.Add(chkClearOnRun);
         panel.Controls.Add(btnSave);
     }
 }
@@ -1581,6 +1591,8 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using JNOT.Shared.UI.Panels;
+using JNOT.Shared.UI.Controls;
 
 namespace JNOT.FileRenamer.UI
 {
@@ -1672,10 +1684,10 @@ namespace JNOT.FileRenamer.UI
             // -----------------------------
             // Log Output
             // -----------------------------
-            var txtLog = new TextBox
+            var txtLog = new JnotRichOutputBox
             {
                 Multiline = true,
-                ScrollBars = ScrollBars.Vertical,
+                ScrollBars = RichTextBoxScrollBars.ForcedVertical,
                 Width = 450,
                 Height = 300,
                 Top = 170,
@@ -1696,7 +1708,7 @@ namespace JNOT.FileRenamer.UI
                 }
                 catch (Exception ex)
                 {
-                    txtLog.AppendText($"ERROR: {ex.Message}{Environment.NewLine}");
+                    txtLog.AppendError($"ERROR: {ex.Message}{Environment.NewLine}");
                     _logger.Log($"ERROR: {ex.Message}");
                 }
                 finally
@@ -1717,7 +1729,7 @@ namespace JNOT.FileRenamer.UI
             panel.Controls.Add(btnRun);
             panel.Controls.Add(txtLog);
         }
-        private void RunRenamePipeline(FileRenamerConfig cfg, TextBox log)
+        private void RunRenamePipeline(FileRenamerConfig cfg, JnotRichOutputBox log)
         {
             var scanner = new InputFolderScanner();
             var excelReader = new ExcelReader();
@@ -1730,7 +1742,7 @@ namespace JNOT.FileRenamer.UI
 
             if (!files.Any())
             {
-                log.AppendText("No .xlsx files found in input folder." + Environment.NewLine);
+                log.AppendWarning("No .xlsx files found in input folder." + Environment.NewLine);
                 _logger.Log("No .xlsx files found in input folder.");
                 return;
             }
@@ -1740,11 +1752,11 @@ namespace JNOT.FileRenamer.UI
             // ---------------------------------------------------------
             if (cfg.DryRun)
             {
-                log.AppendText("DRY RUN MODE — No files will be modified." + Environment.NewLine);
+                log.AppendDebug("DRY RUN MODE — No files will be modified." + Environment.NewLine);
                 _logger.Log("DRY RUN MODE — No files will be modified.");
             }
 
-            log.AppendText($"Found {files.Count} file(s). Starting rename..." + Environment.NewLine);
+            log.AppendInfo($"Found {files.Count} file(s). Starting rename..." + Environment.NewLine);
             _logger.Log($"Found {files.Count} file(s). Starting rename...");
 
             int index = 0;
@@ -1752,7 +1764,7 @@ namespace JNOT.FileRenamer.UI
             {
                 index++;
                 string header = $"[{index}/{files.Count}] Processing: {file}";
-                log.AppendText(header + Environment.NewLine);
+                log.AppendInfo(header + Environment.NewLine);
                 _logger.Log(header);
 
                 try
@@ -1769,7 +1781,7 @@ namespace JNOT.FileRenamer.UI
                     if (cfg.DryRun)
                     {
                         string msg = $"DRY RUN → Would rename: {file} → {destExcelPath}";
-                        log.AppendText(msg + Environment.NewLine);
+                        log.AppendDebug(msg + Environment.NewLine);
                         _logger.Log(msg);
                     }
 
@@ -1794,7 +1806,7 @@ namespace JNOT.FileRenamer.UI
                     {
                         string pdfKey = pivot.JobNumberRaw;
                         string msg = $"DRY RUN → Would rename matching PDF for job {pdfKey} (if found)";
-                        log.AppendText(msg + Environment.NewLine);
+                        log.AppendDebug(msg + Environment.NewLine);
                         _logger.Log(msg);
                     }
 
@@ -1804,24 +1816,24 @@ namespace JNOT.FileRenamer.UI
                     if (!cfg.DryRun)
                     {
                         string successMsg = $"SUCCESS → {finalExcelName}";
-                        log.AppendText(successMsg + Environment.NewLine);
+                        log.AppendSuccess(successMsg + Environment.NewLine);
                         _logger.Log(successMsg);
                     }
                 }
                 catch (Exception ex)
                 {
                     string errorMsg = $"ERROR → {ex.Message}";
-                    log.AppendText(errorMsg + Environment.NewLine);
+                    log.AppendError(errorMsg + Environment.NewLine);
                     _logger.Log(errorMsg);
                 }
 
-                log.AppendText(Environment.NewLine);
+                log.AppendInfo(Environment.NewLine);
             }
 
-            log.AppendText("Rename operation completed." + Environment.NewLine);
+            log.AppendInfo("Rename operation completed." + Environment.NewLine);
             _logger.Log("Rename operation completed.");
         }
-        private void oldRunRenamePipeline(FileRenamerConfig cfg, TextBox log)
+        private void oldRunRenamePipeline(FileRenamerConfig cfg, JnotRichOutputBox log)
         {
             var scanner = new InputFolderScanner();
             var excelReader = new ExcelReader();
@@ -1834,12 +1846,12 @@ namespace JNOT.FileRenamer.UI
 
             if (!files.Any())
             {
-                log.AppendText("No .xlsx files found in input folder." + Environment.NewLine);
+                log.AppendWarning("No .xlsx files found in input folder." + Environment.NewLine);
                 _logger.Log("No .xlsx files found in input folder.");
                 return;
             }
 
-            log.AppendText($"Found {files.Count} file(s). Starting rename..." + Environment.NewLine);
+            log.AppendInfo($"Found {files.Count} file(s). Starting rename..." + Environment.NewLine);
             _logger.Log($"Found {files.Count} file(s). Starting rename...");
 
             int index = 0;
@@ -1847,7 +1859,7 @@ namespace JNOT.FileRenamer.UI
             {
                 index++;
                 string header = $"[{index}/{files.Count}] Processing: {file}";
-                log.AppendText(header + Environment.NewLine);
+                log.AppendInfo(header + Environment.NewLine);
                 _logger.Log(header);
 
                 try
@@ -1870,20 +1882,20 @@ namespace JNOT.FileRenamer.UI
                     );
 
                     string successMsg = $"SUCCESS → {finalExcelName}";
-                    log.AppendText(successMsg + Environment.NewLine);
+                    log.AppendSuccess(successMsg + Environment.NewLine);
                     _logger.Log(successMsg);
                 }
                 catch (Exception ex)
                 {
                     string errorMsg = $"ERROR → {ex.Message}";
-                    log.AppendText(errorMsg + Environment.NewLine);
+                    log.AppendError(errorMsg + Environment.NewLine);
                     _logger.Log(errorMsg);
                 }
 
-                log.AppendText(Environment.NewLine);
+                log.AppendInfo(Environment.NewLine);
             }
 
-            log.AppendText("Rename operation completed." + Environment.NewLine);
+            log.AppendInfo("Rename operation completed." + Environment.NewLine);
             _logger.Log("Rename operation completed.");
         }
     }

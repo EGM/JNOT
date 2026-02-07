@@ -55,7 +55,8 @@ namespace JNOT.Shared.Config.IO
                 InputFolder = ReadString(section, "input_folder", ""),
                 OutputFolder = ReadString(section, "output_folder", ""),
                 Debug = ReadBool(section, "debug", false),
-                DryRun = ReadBool(section, "dry_run", true)
+                DryRun = ReadBool(section, "dry_run", true),
+                ClearOnRun = ReadBool(section, "clear_on_run", true)
             };
         }
 

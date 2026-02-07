@@ -127,7 +127,8 @@ namespace JNOT.Shared.Config.IO
                 InputFolder = ReadString(section, "input_folder", ""),
                 OutputFolder = ReadString(section, "output_folder", ""),
                 Debug = ReadBool(section, "debug", false),
-                DryRun = ReadBool(section, "dry_run", true)
+                DryRun = ReadBool(section, "dry_run", true),
+                ClearOnRun = ReadBool(section, "clear_on_run", true)
             };
         }
 
@@ -199,6 +200,7 @@ public class ConfigWriter
         frSection["output_folder"] = config.FileRenamer.OutputFolder;
         frSection["debug"] = config.FileRenamer.Debug;
         frSection["dry_run"] = config.FileRenamer.DryRun;
+        frSection["clear_on_run"] = config.FileRenamer.ClearOnRun;
 
         var text = Toml.FromModel(root);
         Directory.CreateDirectory(Path.GetDirectoryName(path)!);
@@ -289,6 +291,7 @@ namespace JNOT.Shared.Config.Models
         public string OutputFolder { get; set; } = "";
         public bool Debug { get; set; } = false;
         public bool DryRun { get; set; } = false;
+        public bool ClearOnRun { get; set; } = true;
     }
 }
 ```

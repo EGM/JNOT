@@ -44,11 +44,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Panels\OutputPanel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\JnotRichOutputBox .cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\JnotLogLevel.cs" />
     <Compile Include="ITaskPaneContentProvider.cs" />
     <Compile Include="JnotTaskPane.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

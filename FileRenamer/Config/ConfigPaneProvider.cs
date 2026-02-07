@@ -81,12 +81,20 @@ public class ConfigPaneProvider : ITaskPaneContentProvider
             Left = 10,
             AutoSize = true
         };
+        var chkClearOnRun = new CheckBox
+        {
+            Text = "Clear On Run",
+            Checked = _cfg.ClearOnRun,
+            Top = 190,
+            Left = 10,
+            AutoSize = true
+        };
 
         var btnSave = new Button
         {
             Text = "Save Configuration",
             Width = 150,
-            Top = 200,
+            Top = 230,
             Left = 10
         };
 
@@ -98,6 +106,7 @@ public class ConfigPaneProvider : ITaskPaneContentProvider
                 _cfg.OutputFolder = txtOutput.Text;
                 _cfg.Debug = chkDebug.Checked;
                 _cfg.DryRun = chkDryRun.Checked;
+                _cfg.ClearOnRun = chkClearOnRun.Checked;
 
                 var svc = new ConfigService(
                     new ConfigLoader(new ConfigMigrationEngine()),
@@ -129,6 +138,7 @@ public class ConfigPaneProvider : ITaskPaneContentProvider
 
         panel.Controls.Add(chkDebug);
         panel.Controls.Add(chkDryRun);
+        panel.Controls.Add(chkClearOnRun);
         panel.Controls.Add(btnSave);
     }
 }
