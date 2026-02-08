@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<customUI xmlns="http://schemas.microsoft.com/office/2009/07/customui" onLoad="Ribbon_Load">
+  <ribbon>
+    <tabs>
+		<tab id="JNOT_MainTab" label="WWTP #1 Tools">
+
+			<group id="grpFileRenamer" label="File Renamer">
+
+				<button id="btnOpenFileRenamer"
+						label="Open File Renamer"
+						size="large"
+						onAction="OpenFileRenamer_Click"
+						imageMso="FileOpen" />
+
+				<button id="btnConfig"
+						label="Configuration"
+						size="large"
+						onAction="OpenConfig_Click"
+						imageMso="HappyFace" />
+
+			</group>
+
+		</tab>
+    </tabs>
+  </ribbon>
+</customUI>

@@ -18,15 +18,35 @@
       wrapped in this namespace at runtime.
   -->
   <PropertyGroup>
-    <ProjectTypeGuids>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <ProjectTypeGuids>{BAA0C2D2-18E2-41B9-852F-F413020CAA33};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{005A4591-271A-4C37-96DD-317404202848}</ProjectGuid>
+    <ProjectGuid>{D77EFB95-A483-4BCC-9DC5-57BF6C623A9B}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>JNOT.FileRenamer</RootNamespace>
-    <AssemblyName>JNOT.FileRenamer</AssemblyName>
+    <NoStandardLibraries>false</NoStandardLibraries>
+    <RootNamespace>AddIn</RootNamespace>
+    <AssemblyName>AddIn</AssemblyName>
+    <LoadBehavior>3</LoadBehavior>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <DefineConstants>VSTO40</DefineConstants>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <BootstrapperComponentsLocation>HomeSite</BootstrapperComponentsLocation>
+    <ResolveComReferenceSilent>true</ResolveComReferenceSilent>
     <LangVersion>10.0</LangVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.VSTORuntime.4.0">
+      <Visible>False</Visible>
+      <ProductName>Microsoft Visual Studio 2010 Tools for Office Runtime %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <PropertyGroup>
+    <!--
+      OfficeApplication
+        Add-in host application
+    -->
+    <OfficeApplication>Excel</OfficeApplication>
   </PropertyGroup>
   <!--
     This section defines properties that are set when the "Debug" configuration is selected.
@@ -91,15 +111,21 @@
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Tomlyn.Signed, Version=0.20.0.0, Culture=neutral, PublicKeyToken=925c35bbd70fa682, processorArchitecture=MSIL">
-      <HintPath>..\packages\Tomlyn.Signed.0.20.0\lib\netstandard2.0\Tomlyn.Signed.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Office.Tools.v4.0.Framework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <Private>False</Private>
     </Reference>
+    <Reference Include="Microsoft.VisualStudio.Tools.Applications.Runtime, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Office.Tools, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Microsoft.Office.Tools.Common, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Office.Tools.Excel, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <Private>False</Private>
     </Reference>
   </ItemGroup>
@@ -160,23 +186,6 @@
     can be found.
   -->
   <ItemGroup>
-    <Compile Include="Business\Pattern.cs" />
-    <Compile Include="Business\PatternEngine.cs" />
-    <Compile Include="Business\RenameEngine.cs" />
-    <Compile Include="Config\ConfigPaneProvider.cs" />
-    <Compile Include="Config\FileRenamerConfigAdapter.cs" />
-    <Compile Include="Config\IFileRenamerConfigAdapter.cs" />
-    <Compile Include="ExcelInterop\ExcelReader.cs" />
-    <Compile Include="ExcelInterop\HeaderBlock.cs" />
-    <Compile Include="ExcelInterop\ParameterBlock.cs" />
-    <Compile Include="ExcelInterop\ParamSitePair.cs" />
-    <Compile Include="ExcelInterop\PivotData.cs" />
-    <Compile Include="ExcelInterop\PivotParser.cs" />
-    <Compile Include="FileSystem\InputFolderScanner.cs" />
-    <Compile Include="FileSystem\OutputFolderWriter.cs" />
-    <Compile Include="FileSystem\SafeRenameService.cs" />
-    <Compile Include="Logging\Logger.cs" />
-    <Compile Include="UI\FileRenamerPaneProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -189,6 +198,7 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <None Include="AddIn_TemporaryKey.pfx" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -197,12 +207,33 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="AddInRibbon.cs" />
+    <Compile Include="ThisAddIn.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <None Include="ThisAddIn.Designer.xml">
+      <DependentUpon>ThisAddIn.cs</DependentUpon>
+    </None>
+    <Compile Include="ThisAddIn.Designer.cs">
+      <DependentUpon>ThisAddIn.Designer.xml</DependentUpon>
+    </Compile>
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="AddInRibbon.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FileRenamer\FileRenamer.csproj">
+      <Project>{005a4591-271a-4c37-96dd-317404202848}</Project>
+      <Name>FileRenamer</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Shared\Config\Shared.Config.csproj">
       <Project>{6c05ad0c-d60f-4181-a021-0609884ba658}</Project>
       <Name>Shared.Config</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Shared\Info\Shared.Info.csproj">
+      <Project>{6c76940d-377e-48b5-9952-f8f5c3d7c3e2}</Project>
+      <Name>Shared.Info</Name>
     </ProjectReference>
     <ProjectReference Include="..\Shared\UI\Shared.UI.csproj">
       <Project>{87bebfd8-e577-4b87-aef6-d9986fa43509}</Project>
@@ -218,12 +249,23 @@
     <SignManifests>true</SignManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestKeyFile>FileRenamer_TemporaryKey.pfx</ManifestKeyFile>
+    <ManifestKeyFile>AddIn_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>9CE08E2F13562BA71A96C40C4530BAD5778F6A3B</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>B167C6CE9EE528EACC6612D15DEAD5214FF1F357</ManifestCertificateThumbprint>
   </PropertyGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- Include additional build rules for an Office application add-in. -->
+  <Import Project="$(VSToolsPath)\OfficeTools\Microsoft.VisualStudio.Tools.Office.targets" Condition="'$(VSToolsPath)' != ''" />
   <!-- This section defines VSTO properties that describe the host-changeable project properties. -->
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{BAA0C2D2-18E2-41B9-852F-F413020CAA33}">
+        <ProjectProperties HostName="Excel" HostPackage="{29A7B9D7-A7F1-4328-8EF0-6B2D1A56B2C1}" OfficeVersion="15.0" VstxVersion="4.0" ApplicationType="Excel" Language="cs" TemplatesPath="" DebugInfoExeName="#Software\Microsoft\Office\16.0\Excel\InstallRoot\Path#excel.exe" DebugInfoCommandLine="/x" AddItemTemplatesGuid="{51063C3A-E220-4D12-8922-BDA915ACD783}" />
+        <Host Name="Excel" GeneratedCodeNamespace="AddIn" IconIndex="0">
+          <HostItem Name="ThisAddIn" Code="ThisAddIn.cs" CanonicalName="AddIn" CanActivate="false" IconIndex="1" Blueprint="ThisAddIn.Designer.xml" GeneratedCode="ThisAddIn.Designer.cs" />
+        </Host>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
 </Project>
