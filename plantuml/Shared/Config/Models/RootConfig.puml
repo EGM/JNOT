@@ -1,0 +1,7 @@
+@startuml
+class RootConfig {
+    + Title : string <<get>> <<set>> = "JNOT Global Configuration"
+    + Version : string <<get>> <<set>> = "1.0"
+}
+RootConfig o-> "FileRenamer" FileRenamerConfig
+@enduml

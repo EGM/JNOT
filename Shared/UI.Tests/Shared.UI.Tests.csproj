@@ -24,4 +24,10 @@
     <ProjectReference Include="..\UI\Shared.UI.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+  <FrameworkReference Include="Microsoft.WindowsDesktop.App.WindowsForms" />
+</ItemGroup>
+
+
+
 </Project>

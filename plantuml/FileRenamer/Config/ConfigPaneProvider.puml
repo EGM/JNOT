@@ -1,0 +1,9 @@
+@startuml
+class ConfigPaneProvider {
+    + Title : string <<get>>
+    + Status : string <<get>>
+    + ConfigPaneProvider(adapter:IFileRenamerConfigAdapter)
+    + PopulateAsync(panel:Panel) : Task
+}
+ITaskPaneContentProvider <|-- ConfigPaneProvider
+@enduml

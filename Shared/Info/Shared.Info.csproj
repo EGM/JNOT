@@ -12,6 +12,7 @@
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
+    <LangVersion>10.0</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -33,6 +34,8 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -41,8 +44,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class2.cs" />
+    <Compile Include="InfoPaneProvider.cs" />
+    <Compile Include="InfoMetadata.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\FileRenamer\FileRenamer.csproj">
+      <Project>{005a4591-271a-4c37-96dd-317404202848}</Project>
+      <Name>FileRenamer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Config\Shared.Config.csproj">
+      <Project>{6c05ad0c-d60f-4181-a021-0609884ba658}</Project>
+      <Name>Shared.Config</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UI\Shared.UI.csproj">
+      <Project>{87bebfd8-e577-4b87-aef6-d9986fa43509}</Project>
+      <Name>Shared.UI</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

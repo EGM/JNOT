@@ -1,0 +1,9 @@
+@startuml
+class InfoPaneProvider {
+    + ExcelVersion : string <<get>> <<set>>
+    + VstoRuntimeVersion : string <<get>> <<set>>
+    + BuildDate : string <<get>> <<set>>
+    + Version : string <<get>> <<set>>
+    + <<async>> PopulateAsync(host:Control) : Task
+}
+@enduml

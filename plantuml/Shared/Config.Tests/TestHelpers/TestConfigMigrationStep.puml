@@ -1,0 +1,9 @@
+@startuml
+class TestConfigMigrationStep {
+    + FromVersion : string <<get>>
+    + ToVersion : string <<get>>
+    + Applied : bool <<get>>
+    + Apply(config:RootConfig) : void
+}
+IConfigMigrationStep <|-- TestConfigMigrationStep
+@enduml

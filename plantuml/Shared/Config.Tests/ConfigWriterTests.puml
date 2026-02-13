@@ -1,0 +1,6 @@
+@startuml
+class ConfigWriterTests {
+    + Save_WritesTOMLFile() : void
+    + Save_PreservesUnknownSections() : void
+}
+@enduml

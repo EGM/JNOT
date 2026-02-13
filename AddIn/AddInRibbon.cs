@@ -1,30 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using Office = Microsoft.Office.Core;
-
-// TODO:  Follow these steps to enable the Ribbon (XML) item:
-
-// 1: Copy the following code block into the ThisAddin, ThisWorkbook, or ThisDocument class.
-
-//  protected override Microsoft.Office.Core.IRibbonExtensibility CreateRibbonExtensibilityObject()
-//  {
-//      return new Ribbon1();
-//  }
-
-// 2. Create callback methods in the "Ribbon Callbacks" region of this class to handle user
-//    actions, such as clicking a button. Note: if you have exported this Ribbon from the Ribbon designer,
-//    move your code from the event handlers to the callback methods and modify the code to work with the
-//    Ribbon extensibility (RibbonX) programming model.
-
-// 3. Assign attributes to the control tags in the Ribbon XML file to identify the appropriate callback methods in your code.  
-
-// For more information, see the Ribbon XML documentation in the Visual Studio Tools for Office Help.
-
 
 namespace AddIn
 {
@@ -79,14 +61,42 @@ namespace AddIn
             System.Diagnostics.Debug.WriteLine("OpenConfig_Click fired");
             Globals.ThisAddIn.ShowConfigPane();
         }
-      
+
+        public void OpenInfo_Click(Office.IRibbonControl control)
+        {
+            System.Diagnostics.Debug.WriteLine("OpenInfo_Click fired");
+            Globals.ThisAddIn.ShowInfoPane();
+            System.Diagnostics.Debug.WriteLine("After ThisAddIn.ShowInfoPane completes");
+        }
+
+        public void OpenHelp_Click(Office.IRibbonControl control)
+        {
+            System.Diagnostics.Debug.WriteLine("OpenHelp_Click fired");
+            System.Diagnostics.Process.Start("https://egm.github.io/JNOT/");
+        }
+
         //Create callback methods here. For more information about adding callback methods, visit https://go.microsoft.com/fwlink/?LinkID=271226
 
-        //public void Ribbon_Load(Office.IRibbonUI ribbonUI)        {            this.ribbon = ribbonUI;        }
-
-        
-
         #region Helpers
+
+        public Bitmap GetImage(Office.IRibbonControl control)
+        {
+            return control.Id switch
+            {
+                "btnHelp" => LoadPng("AddIn.resources.help.png"),
+                "btnInfo" => LoadPng("AddIn.resources.info.png"),
+                "btnConfig" => LoadPng("AddIn.resources.gear.png"),
+                "btnFileRenamer" => LoadPng("AddIn.resources.file.png"),
+                _ => null
+            };
+        }
+        
+        private Bitmap LoadPng(string resourceName)
+        {
+            var asm = Assembly.GetExecutingAssembly();
+            using var stream = asm.GetManifestResourceStream(resourceName);
+            return stream != null ? new Bitmap(stream) : null;
+        }
 
         private static string GetResourceText(string resourceName)
         {

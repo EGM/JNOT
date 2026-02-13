@@ -1,0 +1,5 @@
+@startuml
+class PivotParser {
+    + Parse(grid:string[,], sampleDateOverride:string, jobNumberOverride:string) : PivotData
+}
+@enduml

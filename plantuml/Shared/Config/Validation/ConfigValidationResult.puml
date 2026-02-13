@@ -1,0 +1,8 @@
+@startuml
+class ConfigValidationResult {
+    + IsValid : bool <<get>>
+}
+class "List`1"<T> {
+}
+ConfigValidationResult o-> "Errors<string>" "List`1"
+@enduml

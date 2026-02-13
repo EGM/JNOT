@@ -1,0 +1,5 @@
+@startuml
+class ConfigWriter {
+    + Save(path:string, config:RootConfig) : void
+}
+@enduml

@@ -1,0 +1,18 @@
+@startuml
+class PivotData {
+    + SampleDateRaw : string <<get>> <<set>> = ""
+    + JobNumberRaw : string <<get>> <<set>> = ""
+    + PivotData()
+    + PivotData(sampleDateRaw:string, pairs:List<PivotPair>)
+    + PivotData(sampleDateRaw:string, jobNumberRaw:string, pairs:List<PivotPair>)
+}
+class PivotPair {
+    + Parameter : string <<get>> <<set>> = ""
+    + SiteId : string <<get>> <<set>> = ""
+    + PivotPair()
+    + PivotPair(parameter:string, siteID:string)
+}
+class "List`1"<T> {
+}
+PivotData o-> "Pairs<PivotPair>" "List`1"
+@enduml

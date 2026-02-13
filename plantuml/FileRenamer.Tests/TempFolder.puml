@@ -1,0 +1,8 @@
+@startuml
+class TempFolder <<sealed>> {
+    + Path : string <<get>>
+    + TempFolder()
+    + Dispose() : void
+}
+IDisposable <|-- TempFolder
+@enduml

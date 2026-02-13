@@ -5,8 +5,10 @@ using JNOT.Shared.Config;
 using JNOT.Shared.Config.IO;
 using JNOT.Shared.Config.Migration;
 using JNOT.Shared.Config.Services;
+using JNOT.Shared.Info;
 using Microsoft.Office.Tools;
 using System;
+using System.Diagnostics;
 using System.Windows.Forms;
 using Office = Microsoft.Office.Core;
 
@@ -14,8 +16,14 @@ namespace AddIn
 {
     public partial class ThisAddIn
     {
+        public string ExcelVersion => Application.Version;
+        public string VstoRuntimeVersion =>
+            FileVersionInfo.GetVersionInfo(typeof(Globals).Assembly.Location).FileVersion;
+
+
         private CustomTaskPane _fileRenamerPane;
         private CustomTaskPane _configPane;
+        private CustomTaskPane _infoPane;
 
         private IFileRenamerConfigAdapter _adapter;
         private Logger _logger;
@@ -51,7 +59,7 @@ namespace AddIn
                 var provider = new FileRenamerPaneProvider(_adapter, _logger);
 
                 // Create a UserControl to host the panel
-                var host = new UserControl();
+                var host = new UserControl { Dock = DockStyle.Fill };
                 var panel = new Panel { Dock = DockStyle.Fill };
                 host.Controls.Add(panel);
 
@@ -70,7 +78,7 @@ namespace AddIn
             {
                 var provider = new ConfigPaneProvider(_adapter);
 
-                var host = new UserControl();
+                var host = new UserControl { Dock = DockStyle.Fill };
                 var panel = new Panel { Dock = DockStyle.Fill };
                 host.Controls.Add(panel);
 
@@ -82,6 +90,31 @@ namespace AddIn
 
             _configPane.Visible = true;
         }
+
+        public async void ShowInfoPane()
+        {
+            if (_infoPane == null)
+            {
+                var provider = new InfoPaneProvider
+                {
+                    ExcelVersion = this.ExcelVersion,
+                    VstoRuntimeVersion = this.VstoRuntimeVersion
+                };
+
+                var host = new UserControl { Dock = DockStyle.Fill };
+                var panel = new Panel { Dock = DockStyle.Fill };
+                host.Controls.Add(panel);
+
+                _infoPane = this.CustomTaskPanes.Add(host, "About JNOT");
+                _infoPane.Width = 400;
+
+                await provider.PopulateAsync(panel);
+            }
+
+            _infoPane.Visible = true;
+        }
+
+
 
         #region VSTO generated code
         private void InternalStartup()
