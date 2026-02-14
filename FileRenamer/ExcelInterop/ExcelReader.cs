@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Microsoft.Office.Interop.Excel;
 
 namespace JNOT.FileRenamer.ExcelInterop

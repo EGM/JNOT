@@ -1,4 +1,4 @@
-﻿using JNOT.FileRenamer.Config;
+using JNOT.FileRenamer.Config;
 using JNOT.Shared.Config.IO;
 using JNOT.Shared.Config.Migration;
 using JNOT.Shared.Config.Models;

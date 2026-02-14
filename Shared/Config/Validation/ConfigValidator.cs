@@ -1,4 +1,4 @@
-﻿using JNOT.Shared.Config.Models;
+using JNOT.Shared.Config.Models;
 
 namespace JNOT.Shared.Config.Validation
 {

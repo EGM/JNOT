@@ -36,6 +36,7 @@
 !include .\\Shared\Config.Tests\ConfigWriterTests.puml
 !include .\\Shared\Info\InfoMetadata.puml
 !include .\\Shared\Info\InfoPaneProvider.puml
+!include .\\Shared\UI\Class1.puml
 !include .\\Shared\UI\ITaskPaneContentProvider.puml
 !include .\\Shared\UI\JnotTaskPane.puml
 !include .\\Shared\UI.Tests\CollapsibleCardSectionTests.puml

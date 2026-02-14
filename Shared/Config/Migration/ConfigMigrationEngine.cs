@@ -1,4 +1,4 @@
-﻿using JNOT.Shared.Config.Defaults;
+using JNOT.Shared.Config.Defaults;
 using JNOT.Shared.Config.Migration;
 using JNOT.Shared.Config.Models;
 using System;

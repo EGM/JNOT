@@ -1,4 +1,4 @@
-﻿using JNOT.Shared.Config.IO;
+using JNOT.Shared.Config.IO;
 using JNOT.Shared.Config.Models;
 using JNOT.Shared.Config.Validation;
 using System;

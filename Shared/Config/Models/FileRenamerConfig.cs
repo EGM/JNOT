@@ -1,4 +1,4 @@
-﻿
+
 namespace JNOT.Shared.Config.Models
 {
     public class FileRenamerConfig

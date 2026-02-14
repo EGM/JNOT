@@ -1,4 +1,4 @@
-﻿using JNOT.FileRenamer.Business;
+using JNOT.FileRenamer.Business;
 using JNOT.FileRenamer.ExcelInterop;
 using JNOT.FileRenamer.FileSystem;
 using System;

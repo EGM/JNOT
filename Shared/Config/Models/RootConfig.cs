@@ -1,4 +1,4 @@
-﻿
+
 namespace JNOT.Shared.Config.Models
 {
     public class RootConfig
@@ -10,3 +10,4 @@ namespace JNOT.Shared.Config.Models
         // Future tools go here
     }
 }
+

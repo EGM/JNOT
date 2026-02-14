@@ -1,4 +1,4 @@
-﻿using Xunit;
+using Xunit;
 using JNOT.Shared.Config.Services;
 using JNOT.Shared.Config.IO;
 using JNOT.Shared.Config.Migration;

@@ -1,4 +1,4 @@
-﻿namespace JNOT.Shared.UI.Controls
+namespace JNOT.Shared.UI.Controls
 {
     public enum JnotLogLevel
     {

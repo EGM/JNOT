@@ -1,4 +1,4 @@
-﻿namespace JNOT.FileRenamer.ExcelInterop
+namespace JNOT.FileRenamer.ExcelInterop
 {
     public class ParamSitePair
     {

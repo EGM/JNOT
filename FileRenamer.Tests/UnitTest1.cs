@@ -1,4 +1,4 @@
-﻿namespace JNOT.FileRenamer.Tests
+namespace JNOT.FileRenamer.Tests
 {
     public class UnitTest1
     {
@@ -9,3 +9,4 @@
         }
     }
 }
+

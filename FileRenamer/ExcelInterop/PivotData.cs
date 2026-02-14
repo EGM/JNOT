@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 
 namespace JNOT.FileRenamer.ExcelInterop
 {
@@ -39,3 +39,4 @@ namespace JNOT.FileRenamer.ExcelInterop
         
    }
 }
+

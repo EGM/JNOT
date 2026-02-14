@@ -1,4 +1,4 @@
-﻿using System.Windows.Forms;
+using System.Windows.Forms;
 using JNOT.Shared.UI.Controls;
 
 namespace JNOT.Shared.UI.Panels

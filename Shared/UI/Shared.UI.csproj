@@ -49,6 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Class1.cs" />
     <Compile Include="Controls\CardSection.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -73,6 +74,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="resources\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include=".editorconfig" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

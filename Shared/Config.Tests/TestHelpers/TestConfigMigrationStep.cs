@@ -1,4 +1,4 @@
-﻿using JNOT.Shared.Config.Models;
+using JNOT.Shared.Config.Models;
 using JNOT.Shared.Config.Migration;
 
 namespace JNOT.Shared.Config.Tests.TestHelpers;

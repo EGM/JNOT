@@ -1,4 +1,4 @@
-﻿using JNOT.FileRenamer.ExcelInterop;
+using JNOT.FileRenamer.ExcelInterop;
 using System.Linq;
 using Tomlyn;
 

@@ -1,4 +1,4 @@
-﻿using JNOT.FileRenamer.Config;
+using JNOT.FileRenamer.Config;
 using JNOT.FileRenamer.Logging;
 using JNOT.FileRenamer.UI;
 using JNOT.Shared.Config;

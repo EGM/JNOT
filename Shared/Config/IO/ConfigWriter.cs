@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 using JNOT.Shared.Config.Models;
 using Tomlyn;
 using Tomlyn.Model;
