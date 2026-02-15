@@ -27,6 +27,7 @@ namespace JNOT.FileRenamer.Business
         public int? RequiredParameterCount { get; set; }
     }
 }
+
 ```
 
 - Business\PatternEngine.cs
@@ -205,6 +206,7 @@ namespace JNOT.FileRenamer.Business
         }
     }
 }
+
 ```
 
 - Business\RenameEngine.cs
@@ -335,6 +337,7 @@ namespace JNOT.FileRenamer.Business
         }
     }
 }
+
 ```
 
 
@@ -487,6 +490,7 @@ public class ConfigPaneProvider : ITaskPaneContentProvider
         panel.Controls.Add(btnSave);
     }
 }
+
 ```
 
 - Config\FileRenamerConfigAdapter.cs
@@ -512,6 +516,7 @@ public class FileRenamerConfigAdapter : IFileRenamerConfigAdapter
         return root.FileRenamer;
     }
 }
+
 ```
 
 - Config\IFileRenamerConfigAdapter.cs
@@ -525,6 +530,7 @@ public interface IFileRenamerConfigAdapter
 {
     FileRenamerConfig GetConfig();
 }
+
 ```
 
 
@@ -594,6 +600,7 @@ namespace JNOT.FileRenamer.ExcelInterop
         }
     }
 }
+
 ```
 
 - ExcelInterop\HeaderBlock.cs
@@ -661,6 +668,7 @@ namespace JNOT.FileRenamer.ExcelInterop
         }
     }
 }
+
 ```
 
 - ExcelInterop\ParameterBlock.cs
@@ -738,6 +746,7 @@ namespace JNOT.FileRenamer.ExcelInterop
         }
     }
 }
+
 ```
 
 - ExcelInterop\ParamSitePair.cs
@@ -757,6 +766,7 @@ namespace JNOT.FileRenamer.ExcelInterop
         }
     }
 }
+
 ```
 
 - ExcelInterop\PivotData.cs
@@ -803,6 +813,7 @@ namespace JNOT.FileRenamer.ExcelInterop
         
    }
 }
+
 
 ```
 
@@ -855,6 +866,7 @@ namespace JNOT.FileRenamer.ExcelInterop
         }
     }
 }
+
 ```
 
 - FileRenamer.csproj
@@ -893,6 +905,7 @@ namespace JNOT.FileRenamer.FileSystem
         }
     }
 }
+
 ```
 
 - FileSystem\OutputFolderWriter.cs
@@ -911,6 +924,7 @@ namespace JNOT.FileRenamer.FileSystem
         }
     }
 }
+
 ```
 
 - FileSystem\SafeRenameService.cs
@@ -951,6 +965,7 @@ namespace JNOT.FileRenamer.FileSystem
         }
     }
 }
+
 ```
 
 
@@ -982,6 +997,7 @@ namespace JNOT.FileRenamer.Logging
         }
     }
 }
+
 ```
 
 
@@ -1027,6 +1043,7 @@ using System.Security;
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
+
 
 
 ```
@@ -1097,6 +1114,7 @@ namespace FileRenamer.Properties {
     }
 }
 
+
 ```
 
 - Properties\Resources.resx
@@ -1129,6 +1147,7 @@ namespace FileRenamer.Properties {
         }
     }
 }
+
 
 ```
 
@@ -1459,4 +1478,5 @@ namespace JNOT.FileRenamer.UI
         }
     }
 }
+
 ```

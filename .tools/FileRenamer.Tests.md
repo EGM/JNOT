@@ -152,6 +152,7 @@ namespace JNOT.FileRenamer.Tests.Business
         }
     }
 }
+
 ```
 
 - Business\PatternEngineTests.cs
@@ -554,6 +555,7 @@ namespace JNOT.FileRenamer.Tests.Business
 
     }
 }
+
 ```
 
 - Business\RenameEngineTests.cs
@@ -717,6 +719,7 @@ namespace JNOT.FileRenamer.Tests.Business
         }
     }
 }
+
 ```
 
 
@@ -946,6 +949,7 @@ namespace JNOT.FileRenamer.Tests.ExcelInterop
         }
     }
 }
+
 ```
 
 - FileRenamer.Tests.csproj
@@ -981,6 +985,7 @@ public sealed class TempFolder : IDisposable
         }
     }
 }
+
 ```
 
 - UnitTest1.cs
@@ -997,6 +1002,7 @@ namespace JNOT.FileRenamer.Tests
         }
     }
 }
+
 
 ```
 

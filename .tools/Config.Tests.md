@@ -91,6 +91,7 @@ output_folder = ""B""
         System.Diagnostics.Debug.WriteLine($"Loaded version: '{cfg.Version}'");
     }
 }
+
 ```
 
 - ConfigServiceTests.cs
@@ -139,6 +140,7 @@ public class ConfigServiceTests
         Assert.Throws<InvalidOperationException>(() => service.Save(cfg));
     }
 }
+
 ```
 
 - ConfigWriterTests.cs
@@ -204,6 +206,7 @@ foo = ""bar""
         Assert.Contains("foo = \"bar\"", text);
     }
 }
+
 ```
 
 - Shared.Config.Tests.csproj
@@ -233,6 +236,7 @@ public sealed class TempFile : IDisposable
             File.Delete(Path);
     }
 }
+
 ```
 
 - TestHelpers\TestConfigMigrationStep.cs
@@ -256,6 +260,7 @@ public class TestConfigMigrationStep : IConfigMigrationStep
         config.Version = "1.1";
     }
 }
+
 ```
 
 - xunit.runner.json

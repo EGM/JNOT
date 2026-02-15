@@ -51,6 +51,7 @@ namespace JNOT.Shared.Info
             $"{Process.GetCurrentProcess().WorkingSet64 / 1024 / 1024} MB";
     }
 }
+
 ```
 
 - InfoPaneProvider.cs
@@ -98,13 +99,13 @@ namespace JNOT.Shared.Info
                 });
 
                 // Version Section
-                var version = new CollapsibleCardSection("Version");
+                var version = new CardSection("Version");
                 version.Add(DiagnosticRow("Version", Version));
                 version.Add(DiagnosticRow("Build Date", BuildDate));
                 root.Controls.Add(version);
 
                 // Components
-                var components = new CollapsibleCardSection("Components");
+                var components = new CardSection("Components");
                 components.Add(Label("Shared.Config"));
                 components.Add(Label("Shared.Info"));
                 components.Add(Label("Shared.UI"));
@@ -113,13 +114,13 @@ namespace JNOT.Shared.Info
                 root.Controls.Add(components);
 
                 // Paths
-                var paths = new CollapsibleCardSection("Paths");
+                var paths = new CardSection("Paths");
                 paths.Add(Label($"Config: {Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData)}\\JNOT"));
                 paths.Add(Label($"Logs: {Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\\JNOT"));
                 root.Controls.Add(paths);
 
                 // Diagnostics
-                var diag = new CollapsibleCardSection("Diagnostics");
+                var diag = new CardSection("Diagnostics");
                 diag.Add(DiagnosticRow("Excel Version", ExcelVersion));
                 diag.Add(DiagnosticRow("VSTO Runtime", VstoRuntimeVersion));
                 diag.Add(DiagnosticRow("OS Version", Environment.OSVersion.ToString()));
@@ -127,13 +128,13 @@ namespace JNOT.Shared.Info
                 root.Controls.Add(diag);
 
                 // Attributions
-                var attrib = new CollapsibleCardSection("Attributions");
+                var attrib = new CardSection("Attributions");
                 attrib.Add(Label("Parser — MIT License"));
                 attrib.Add(Label("Icons — Fluent UI System Icons"));
                 root.Controls.Add(attrib);
 
                 // Links
-                var links = new CollapsibleCardSection("Links");
+                var links = new CardSection("Links");
                 links.Add(Link("Documentation", "https://egm.github.io/JNOT/"));
                 links.Add(Link("GitHub Repo", "https://github.com/egm/JNOT"));
                 root.Controls.Add(links);
@@ -202,6 +203,7 @@ namespace JNOT.Shared.Info
         }
     }
 }
+
 ```
 
 
@@ -243,6 +245,7 @@ using System.Runtime.InteropServices;
 //
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
+
 
 ```
 

@@ -4,185 +4,382 @@
 
 ## 📁 Directory: Controls
 
-- Controls\CollapsibleCardSection.cs
+- Controls\ExpandableCard.cs
 
 ```cs
 using System;
+using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 
 namespace JNOT.Shared.UI.Controls
 {
-    public class CollapsibleCardSection : Panel
+    public partial class ExpandableCard : UserControl
     {
-        private readonly Panel _header;
-        private readonly Panel _body;
-        private readonly Label _titleLabel;
-        private readonly PictureBox _chevron;
+        private const int CornerRadius = 3;
+        private const int AnimationDuration = 150;
 
-        private bool _expanded = true;
+        private bool _isExpanded = true;
+        private bool _hover;
+        private bool _pressed;
 
-        public CollapsibleCardSection(string title)
+        private Timer _animationTimer;
+        private int _animationStartHeight;
+        private int _animationTargetHeight;
+        private DateTime _animationStartTime;
+
+        private Control _content;
+
+        public event EventHandler<bool> ExpandedChanged;
+
+        public ExpandableCard()
         {
+            InitializeComponent();
             DoubleBuffered = true;
-            AutoSize = true;
-            AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            BackColor = Color.White;
-            BorderStyle = BorderStyle.FixedSingle;
-            Margin = new Padding(0, 6, 0, 6);
-
-            // Header
-            _header = new Panel
-            {
-                Height = 36,
-                Dock = DockStyle.Top,
-                BackColor = Color.FromArgb(245, 245, 245),
-                Padding = new Padding(10, 8, 10, 8),
-                Cursor = Cursors.Hand
-            };
-
-            _header.MouseEnter += (s, e) => _header.BackColor = Color.FromArgb(235, 235, 235);
-            _header.MouseLeave += (s, e) => _header.BackColor = Color.FromArgb(245, 245, 245);
-            _header.Click += (s, e) => Toggle();
-
-            // Chevron
-            _chevron = new PictureBox
-            {
-                Image = Chevron(true),
-                SizeMode = PictureBoxSizeMode.AutoSize,
-                Dock = DockStyle.Left,
-                Margin = new Padding(0, 0, 8, 0)
-            };
-            _chevron.Click += (s, e) => Toggle();
-
-            // Title
-            _titleLabel = new Label
-            {
-                Text = title,
-                Font = new Font("Segoe UI Semibold", 10),
-                AutoSize = true,
-                Dock = DockStyle.Fill
-            };
-            _titleLabel.Click += (s, e) => Toggle();
-
-            _header.Controls.Add(_titleLabel);
-            _header.Controls.Add(_chevron);
-            Controls.Add(_header);
-
-            // Body
-            _body = new Panel
-            {
-                Dock = DockStyle.Top,
-                AutoSize = true,
-                AutoSizeMode = AutoSizeMode.GrowAndShrink,
-                Padding = new Padding(12)
-            };
-
-            Controls.Add(_body);
+            UpdateChevron();
         }
 
-        public void Add(Control c)
+        // ---------------------------
+        // PUBLIC PROPERTIES
+        // ---------------------------
+
+        [Category("Appearance")]
+        public string HeaderText
         {
-            _body.Controls.Add(c);
+            get => lblTitle.Text;
+            set => lblTitle.Text = value;
         }
 
-        private void Toggle()
+        [Category("Behavior")]
+        public bool IsExpanded
         {
-            _expanded = !_expanded;
-            _chevron.Image = Chevron(_expanded);
-            _body.Visible = _expanded;
+            get => _isExpanded;
+            set
+            {
+                if (_isExpanded == value) return;
+                _isExpanded = value;
+                AnimateExpansion();
+                UpdateChevron();
+                ExpandedChanged?.Invoke(this, _isExpanded);
+            }
         }
 
-        private Bitmap Chevron(bool expanded)
+        [Category("Appearance")]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
+        public Control Content
         {
-            var bmp = new Bitmap(10, 10);
-            using var g = Graphics.FromImage(bmp);
-            g.Clear(Color.Transparent);
+            get => _content;
+            set
+            {
+                if (_content != null)
+                    contentHost.Controls.Remove(_content);
+
+                _content = value;
+
+                if (_content != null)
+                {
+                    _content.Dock = DockStyle.Top;
+                    contentHost.Controls.Add(_content);
+                }
+
+                if (_isExpanded)
+                    contentHost.Height = GetContentHeight();
+            }
+        }
+
+        // ---------------------------
+        // HEADER INTERACTION
+        // ---------------------------
+
+        private void Header_MouseEnter(object sender, EventArgs e)
+        {
+            _hover = true;
+            headerPanel.Invalidate();
+        }
+
+        private void Header_MouseLeave(object sender, EventArgs e)
+        {
+            _hover = false;
+            _pressed = false;
+            headerPanel.Invalidate();
+        }
+
+        private void Header_MouseDown(object sender, MouseEventArgs e)
+        {
+            _pressed = true;
+            headerPanel.Invalidate();
+        }
+
+        private void Header_MouseUp(object sender, MouseEventArgs e)
+        {
+            _pressed = false;
+            headerPanel.Invalidate();
+            ToggleExpanded();
+        }
+
+        private void ToggleExpanded() => IsExpanded = !IsExpanded;
+
+        private void UpdateChevron()
+        {
+            chevron.Image = _isExpanded
+                ? Properties.Resources.ChevronUp32
+                : Properties.Resources.ChevronDown32;
+        }
+
+        // ---------------------------
+        // HEADER PAINTING
+        // ---------------------------
+
+        private void headerPanel_Paint(object sender, PaintEventArgs e)
+        {
+            var g = e.Graphics;
             g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
 
-            using var pen = new Pen(Color.Black, 2);
+            Rectangle rect = new Rectangle(0, 0, headerPanel.Width - 1, headerPanel.Height - 1);
 
-            if (expanded)
+            // Background gradient
+            Color top, bottom;
+
+            if (_pressed)
             {
-                g.DrawLines(pen, new[]
-                {
-                    new Point(1, 3),
-                    new Point(5, 7),
-                    new Point(9, 3)
-                });
+                top = bottom = Color.FromArgb(224, 224, 224);
+            }
+            else if (_hover)
+            {
+                top = Color.FromArgb(240, 240, 240);
+                bottom = Color.FromArgb(230, 230, 230);
             }
             else
             {
-                g.DrawLines(pen, new[]
-                {
-                    new Point(3, 1),
-                    new Point(7, 5),
-                    new Point(3, 9)
-                });
+                top = Color.FromArgb(248, 248, 248);
+                bottom = Color.FromArgb(237, 237, 237);
             }
 
-            return bmp;
+            using (var brush = new System.Drawing.Drawing2D.LinearGradientBrush(rect, top, bottom, 90f))
+                g.FillRectangle(brush, rect);
+
+            // Border
+            using (var pen = new Pen(Color.FromArgb(200, 200, 200)))
+                g.DrawRectangle(pen, rect);
+
+            // Rounded corners
+            using (var path = RoundedRect(rect, CornerRadius))
+            using (var region = new Region(path))
+                headerPanel.Region = region;
+        }
+
+        private System.Drawing.Drawing2D.GraphicsPath RoundedRect(Rectangle bounds, int radius)
+        {
+            int d = radius * 2;
+            var path = new System.Drawing.Drawing2D.GraphicsPath();
+            path.AddArc(bounds.X, bounds.Y, d, d, 180, 90);
+            path.AddArc(bounds.Right - d, bounds.Y, d, d, 270, 90);
+            path.AddArc(bounds.Right - d, bounds.Bottom - d, d, d, 0, 90);
+            path.AddArc(bounds.X, bounds.Bottom - d, d, d, 90, 90);
+            path.CloseFigure();
+            return path;
+        }
+
+        // ---------------------------
+        // EXPANSION ANIMATION
+        // ---------------------------
+
+        private void AnimateExpansion()
+        {
+            if (_animationTimer != null)
+            {
+                _animationTimer.Stop();
+                _animationTimer.Dispose();
+            }
+
+            _animationStartHeight = contentHost.Height;
+            _animationTargetHeight = _isExpanded ? GetContentHeight() : 0;
+            _animationStartTime = DateTime.Now;
+
+            _animationTimer = new Timer { Interval = 15 };
+            _animationTimer.Tick += AnimationTick;
+            _animationTimer.Start();
+        }
+
+        private int GetContentHeight()
+        {
+            if (_content == null) return 0;
+            return _content.PreferredSize.Height + contentHost.Padding.Vertical;
+        }
+
+        private void AnimationTick(object sender, EventArgs e)
+        {
+            double elapsed = (DateTime.Now - _animationStartTime).TotalMilliseconds;
+            double progress = Math.Min(1.0, elapsed / AnimationDuration);
+
+            int newHeight = (int)(_animationStartHeight +
+                                  ((_animationTargetHeight - _animationStartHeight) * progress));
+
+            contentHost.Height = newHeight;
+
+            if (progress >= 1.0)
+            {
+                _animationTimer.Stop();
+                _animationTimer.Dispose();
+            }
         }
     }
 }
 ```
 
-- Controls\CollapsibleSection.cs
+- Controls\ExpandableCard.Designer.cs
+
+```cs
+using System.Drawing;
+using System.Windows.Forms;
+using System.Xml.Linq;
+
+namespace JNOT.Shared.UI.Controls
+{
+    partial class ExpandableCard
+    {
+        private System.ComponentModel.IContainer components = null;
+
+        private Panel headerPanel;
+        private Label lblTitle;
+        private PictureBox chevron;
+        private Panel contentHost;
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+                components.Dispose();
+            base.Dispose(disposing);
+        }
+
+        private void InitializeComponent()
+        {
+            components = new System.ComponentModel.Container();
+
+            headerPanel = new Panel();
+            lblTitle = new Label();
+            chevron = new PictureBox();
+            contentHost = new Panel();
+
+            SuspendLayout();
+
+            // HEADER PANEL
+            headerPanel.Dock = DockStyle.Top;
+            headerPanel.Height = 32;
+            headerPanel.Cursor = Cursors.Hand;
+            headerPanel.Paint += headerPanel_Paint;
+            headerPanel.MouseEnter += Header_MouseEnter;
+            headerPanel.MouseLeave += Header_MouseLeave;
+            headerPanel.MouseDown += Header_MouseDown;
+            headerPanel.MouseUp += Header_MouseUp;
+
+            // TITLE LABEL
+            lblTitle.Dock = DockStyle.Fill;
+            lblTitle.TextAlign = ContentAlignment.MiddleLeft;
+            lblTitle.Font = new Font("Segoe UI", 9F, FontStyle.Semibold);
+            lblTitle.Padding = new Padding(12, 0, 0, 0);
+
+            // CHEVRON
+            chevron.Dock = DockStyle.Right;
+            chevron.Width = 32;
+            chevron.SizeMode = PictureBoxSizeMode.CenterImage;
+            chevron.Cursor = Cursors.Hand;
+            chevron.Click += (s, e) => ToggleExpanded();
+
+            // CONTENT HOST
+            contentHost.Dock = DockStyle.Top;
+            contentHost.AutoSize = true;
+            contentHost.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            contentHost.Padding = new Padding(10);
+
+            // ASSEMBLE HEADER
+            headerPanel.Controls.Add(lblTitle);
+            headerPanel.Controls.Add(chevron);
+
+            // ASSEMBLE CONTROL
+            Controls.Add(contentHost);
+            Controls.Add(headerPanel);
+
+            AutoScaleMode = AutoScaleMode.Dpi;
+            BackColor = Color.Transparent;
+            Name = "ExpandableCard";
+            Size = new Size(300, 100);
+
+            ResumeLayout(false);
+            PerformLayout();
+        }
+    }
+}
+
+```
+
+- Controls\ExpandableSection.cs
 
 ```cs
 using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
 using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace JNOT.Shared.UI.Controls
 {
-    public class CollapsibleSection : Panel
+    public partial class ExpandableSection : UserControl
     {
-        private readonly Panel _content;
-        private readonly Button _toggle;
-        private bool _expanded = true;
-
-        public CollapsibleSection(string title)
+        public ExpandableSection()
         {
-            AutoSize = true;
-            AutoSizeMode = AutoSizeMode.GrowAndShrink;
-
-            _toggle = new Button
-            {
-                Text = "▼ " + title,
-                FlatStyle = FlatStyle.Flat,
-                AutoSize = true,
-                Font = new Font("Segoe UI", 10, FontStyle.Bold),
-                Padding = new Padding(0),
-                Margin = new Padding(0)
-            };
-
-            _toggle.Click += (s, e) => Toggle();
-
-            _content = new Panel
-            {
-                AutoSize = true,
-                AutoSizeMode = AutoSizeMode.GrowAndShrink,
-                Margin = new Padding(20, 5, 0, 5)
-            };
-
-            Controls.Add(_toggle);
-            Controls.Add(_content);
-        }
-
-        public void Add(Control control)
-        {
-            _content.Controls.Add(control);
-        }
-
-        private void Toggle()
-        {
-            _expanded = !_expanded;
-            _content.Visible = _expanded;
-            _toggle.Text = (_expanded ? "▼ " : "► ") + _toggle.Text.Substring(2);
+            InitializeComponent();
         }
     }
 }
+
+```
+
+- Controls\ExpandableSection.Designer.cs
+
+```cs
+namespace JNOT.Shared.UI.Controls
+{
+    partial class ExpandableSection
+    {
+        /// <summary> 
+        /// Required designer variable.
+        /// </summary>
+        private System.ComponentModel.IContainer components = null;
+
+        /// <summary> 
+        /// Clean up any resources being used.
+        /// </summary>
+        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing && (components != null))
+            {
+                components.Dispose();
+            }
+            base.Dispose(disposing);
+        }
+
+        #region Component Designer generated code
+
+        /// <summary> 
+        /// Required method for Designer support - do not modify 
+        /// the contents of this method with the code editor.
+        /// </summary>
+        private void InitializeComponent()
+        {
+            components = new System.ComponentModel.Container();
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+        }
+
+        #endregion
+    }
+}
+
 ```
 
 - Controls\JnotLogLevel.cs
@@ -199,6 +396,7 @@ namespace JNOT.Shared.UI.Controls
         Error = 4
     }
 }
+
 ```
 
 - Controls\JnotRichOutputBox .cs
@@ -375,6 +573,7 @@ namespace JNOT.Shared.UI.Controls
         }
     }
 }
+
 ```
 
 - ITaskPaneContentProvider.cs
@@ -397,6 +596,7 @@ namespace JNOT.Shared.UI
         Task PopulateAsync(Panel contentPanel);
     }
 }
+
 ```
 
 - JnotTaskPane.cs
@@ -462,8 +662,10 @@ namespace JNOT.Shared.UI
         }
     }
 }
+
 ```
 
+- packages.config
 
 ## 📁 Directory: Panels
 
@@ -496,6 +698,7 @@ namespace JNOT.Shared.UI.Panels
         }
     }
 }
+
 ```
 
 
@@ -538,6 +741,12 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
 
+
 ```
 
+
+## 📁 Directory: resources
+
+- resources\down-chevron.png
+- resources\up-chevron.png
 - Shared.UI.csproj

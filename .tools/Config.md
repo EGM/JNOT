@@ -39,6 +39,7 @@ namespace JNOT.Shared.Config.Defaults
     }
 }
 
+
 ```
 
 
@@ -65,6 +66,7 @@ namespace JNOT.Shared.Config.IO
         }
     }
 }
+
 ```
 
 - IO\ConfigLoader.cs
@@ -157,6 +159,7 @@ namespace JNOT.Shared.Config.IO
 
     }
 }
+
 ```
 
 - IO\ConfigWriter.cs
@@ -207,6 +210,7 @@ public class ConfigWriter
         File.WriteAllText(path, text);
     }
 }
+
 ```
 
 
@@ -252,6 +256,7 @@ public class ConfigMigrationEngine
         config.Version = version;
     }
 }
+
 ```
 
 - Migration\IConfigMigrationStep.cs
@@ -274,6 +279,7 @@ namespace JNOT.Shared.Config.Migration
         void Apply(RootConfig config);
     }
 }
+
 ```
 
 
@@ -294,6 +300,7 @@ namespace JNOT.Shared.Config.Models
         public bool ClearOnRun { get; set; } = true;
     }
 }
+
 ```
 
 - Models\RootConfig.cs
@@ -311,6 +318,7 @@ namespace JNOT.Shared.Config.Models
         // Future tools go here
     }
 }
+
 
 ```
 
@@ -353,6 +361,7 @@ using System.Runtime.InteropServices;
 //
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
+
 
 ```
 
@@ -404,6 +413,7 @@ public class ConfigService : IConfigService
         _writer.Save(_path, config);
     }
 }
+
 ```
 
 - Services\IConfigService.cs
@@ -419,6 +429,7 @@ public interface IConfigService
     RootConfig LoadOrCreate();
     void Save(RootConfig config);
 }
+
 ```
 
 - Shared.Config.csproj
@@ -442,6 +453,7 @@ namespace JNOT.Shared.Config.Validation
         public List<string> Errors { get; } = new();
     }
 }
+
 
 ```
 
@@ -484,4 +496,5 @@ namespace JNOT.Shared.Config.Validation
         }
     }
 }
+
 ```
