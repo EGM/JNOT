@@ -1,16 +1,36 @@
 <Solution>
-  <Project Path="AddIn/AddIn.csproj" Id="d77efb95-a483-4bcc-9dc5-57bf6c623a9b">
-    <BuildDependency Project="FileRenamer/FileRenamer.csproj" />
-    <BuildDependency Project="Shared/Config/Shared.Config.csproj" />
-    <BuildDependency Project="Shared/Info/Shared.Info.csproj" />
-    <BuildDependency Project="Shared/UI/Shared.UI.csproj" />
-  </Project>
+  <Folder Name="/Documentation/">
+    <File Path="Documentation/Excel.Addin.csproj.md" />
+    <File Path="Documentation/Excel.Interop.csproj.md" />
+    <File Path="Documentation/Excel.Interop.md" />
+    <File Path="Documentation/Excel.Addin.md" />
+    <File Path="Documentation/FileRenamer.csproj.md" />
+    <File Path="Documentation/FileRenamer.md" />
+    <File Path="Documentation/FileRenamer.Tests.csproj.md" />
+    <File Path="Documentation/FileRenamer.Tests.md" />
+    <File Path="Documentation/Shared.Config.csproj.md" />
+    <File Path="Documentation/Shared.Config.md" />
+    <File Path="Documentation/Shared.Config.Tests.csproj.md" />
+    <File Path="Documentation/Shared.Config.Tests.md" />
+    <File Path="Documentation/Shared.Info.csproj.md" />
+    <File Path="Documentation/Shared.Info.md" />
+    <File Path="Documentation/Shared.UI.Controls.csproj.md" />
+    <File Path="Documentation/Shared.UI.Controls.md" />
+    <File Path="Documentation/Shared.UI.csproj.md" />
+    <File Path="Documentation/Shared.UI.md" />
+    <File Path="Documentation/ThrowAway.Demo.csproj.md" />
+    <File Path="Documentation/ThrowAway.Demo.md" />
+  </Folder>
+  <Project Path="Excel.AddIn/Excel.AddIn.csproj" Id="b9f940ec-73c2-46ef-a694-7032209957be" />
+  <Project Path="Excel.Interop/Excel.Interop.csproj" Id="69c70291-26cf-43a9-ac5d-55c9db560ccb" />
   <Project Path="FileRenamer.Tests/FileRenamer.Tests.csproj" />
-  <Project Path="FileRenamer/FileRenamer.csproj" Id="005a4591-271a-4c37-96dd-317404202848" />
-  <Project Path="Shared/Config.Tests/Shared.Config.Tests.csproj" Id="beef0873-cdef-41a0-a630-fd1530ee9077" />
-  <Project Path="Shared/Config/Shared.Config.csproj" Id="6c05ad0c-d60f-4181-a021-0609884ba658" />
-  <Project Path="Shared/Info/Shared.Info.csproj" Id="6c76940d-377e-48b5-9952-f8f5c3d7c3e2" />
-  <Project Path="Shared/UI.Tests/Shared.UI.Tests.csproj" Id="6c4ec8ee-c9cb-495a-81ac-c2b22e3853c6" />
-  <Project Path="Shared/UI/Shared.UI.csproj" Id="87bebfd8-e577-4b87-aef6-d9986fa43509" />
-  <Project Path="ThrowAwayDemo/ThrowAwayDemo.csproj" Id="7d0b35fd-4361-4b9a-8a4b-4f23a97ed32b" />
+  <Project Path="FileRenamer/FileRenamer.csproj" />
+  <Project Path="Shared.Config.Tests/Shared.Config.Tests.csproj" />
+  <Project Path="Shared.Config/Shared.Config.csproj" />
+  <Project Path="Shared.FileSystem/Shared.FileSystem.csproj" Id="2a3ea937-55a6-4b50-b1c7-57330c5d2937" />
+  <Project Path="Shared.Info/Shared.Info.csproj" />
+  <Project Path="Shared.Logging/Shared.Logging.csproj" Id="f1d1d74d-aa3e-4a44-b527-fd43aa0cbd8b" />
+  <Project Path="Shared.UI.Controls/Shared.UI.Controls.csproj" />
+  <Project Path="Shared.UI/Shared.UI.csproj" />
+  <Project Path="ThrowAway.Demo/ThrowAway.Demo.csproj" />
 </Solution>

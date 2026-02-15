@@ -1,0 +1,25 @@
+# FileRenamer.csproj
+
+```xml
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>Jnot.$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
+    <AssemblyName>Jnot.$(MSBuildProjectName)</AssemblyName>
+	<LangVersion>10.0</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Excel.Interop\Excel.Interop.csproj" />
+    <ProjectReference Include="..\Shared.Config\Shared.Config.csproj" />
+    <ProjectReference Include="..\Shared.Info\Shared.Info.csproj" />
+    <ProjectReference Include="..\Shared.UI.Controls\Shared.UI.Controls.csproj" />
+    <ProjectReference Include="..\Shared.UI\Shared.UI.csproj" />
+  </ItemGroup>
+
+</Project>
+
+```

@@ -1,9 +1,0 @@
-@startuml
-class ThisAddIn <<partial>> {
-    + ExcelVersion : string <<get>>
-    + VstoRuntimeVersion : string <<get>>
-    + ShowFileRenamerPane() : void
-    + ShowConfigPane() : void
-    + <<async>> ShowInfoPane() : void
-}
-@enduml

@@ -1,7 +1,0 @@
-@startuml
-class JnotTaskPane {
-    + JnotTaskPane()
-    + <<async>> LoadFromAsync(provider:ITaskPaneContentProvider) : Task
-}
-UserControl <|-- JnotTaskPane
-@enduml

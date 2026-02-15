@@ -1,6 +1,0 @@
-@startuml
-class PatternEngine {
-    + PatternEngine()
-    + ResolveTypeCode(data:PivotData) : string
-}
-@enduml

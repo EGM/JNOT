@@ -1,0 +1,85 @@
+// deno run --allow-read --allow-write Code2md.ts
+
+import { walk } from "@std/fs/walk";
+import { dirname } from "@std/path/dirname";
+import { basename } from "@std/path/basename";
+
+const root = "C:/Users/John/source/repos/Jnot";
+
+function stripBom(text: string): string {
+  return text.replace(/^\uFEFF/, "");
+}
+
+async function main() {
+  const projectFolders = new Map<string, string>(); // name -> full path
+
+  // 1. Find ALL .csproj files anywhere under root
+  for await (const entry of walk(root, {
+    includeDirs: false,
+    includeFiles: true,
+    followSymlinks: false,
+    skip: [/[/\\](bin|obj|\.git|\.vs)(?=$|[/\\])/],
+  })) {
+    if (entry.path.endsWith(".csproj")) {
+      const folder = dirname(entry.path);
+      const name = basename(folder);
+      projectFolders.set(name, folder);
+    }
+  }
+
+  console.log("Detected projects:", [...projectFolders.keys()]);
+
+  // 2. Generate <project>.md for each project folder
+  for (const [projectName, projectPath] of projectFolders) {
+    const chunks: string[] = [];
+
+    for await (
+      const entry of walk(projectPath, {
+        includeDirs: true,
+        includeFiles: true,
+        followSymlinks: false,
+        skip: [/[/\\](bin|obj|\.git|\.vs)(?=$|[/\\])/],
+      })
+    ) {
+      if (entry.isDirectory) {
+        const rel =
+          entry.path === projectPath
+            ? "/"
+            : entry.path.slice(projectPath.length + 1);
+        chunks.push(`\n## 📁 Directory: ${rel}\n`);
+        continue;
+      }
+
+      // Skip dot-folders
+      if (entry.path.split(/[/\\]/).some((p) => p.startsWith("."))) {
+        continue;
+      }
+
+      const relPath = entry.path.slice(projectPath.length + 1);
+      chunks.push(`- ${relPath}`);
+
+      if (entry.path.endsWith(".cs")) {
+        let text = await Deno.readTextFile(entry.path);
+        text = stripBom(text);
+        chunks.push("\n```cs");
+        chunks.push(text);
+        chunks.push("```\n");
+      }
+
+      if (entry.path.endsWith(".csproj")) {
+        let text = await Deno.readTextFile(entry.path);
+        text = stripBom(text);
+        const mdContent = `# ${entry.name}\n\n\`\`\`xml\n${text}\n\`\`\`\n`;
+        await Deno.writeTextFile(`${projectName}.csproj.md`, mdContent);
+      }
+    }
+
+    const outFile = `${projectName}.md`;
+    await Deno.writeTextFile(outFile, chunks.join("\n"));
+    console.log("Wrote:", outFile);
+  }
+
+  console.log("All project logs complete.");
+}
+
+main();

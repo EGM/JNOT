@@ -1,6 +1,0 @@
-@startuml
-class ConfigLoader {
-    + ConfigLoader(migrationEngine:ConfigMigrationEngine)
-    + LoadOrCreate(path:string) : RootConfig
-}
-@enduml

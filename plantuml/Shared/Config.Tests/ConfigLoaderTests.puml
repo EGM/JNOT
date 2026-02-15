@@ -1,7 +1,0 @@
-@startuml
-class ConfigLoaderTests {
-    + LoadOrCreate_CreatesDefaultConfig_WhenFileMissing() : void
-    + LoadOrCreate_LoadsExistingConfig() : void
-    + LoadOrCreate_RunsMigrationSteps() : void
-}
-@enduml

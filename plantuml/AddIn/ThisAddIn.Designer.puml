@@ -1,9 +1,0 @@
-@startuml
-class ThisAddIn <<sealed>> <<partial>> {
-    + ThisAddIn(factory:global::Microsoft.Office.Tools.Excel.ApplicationFactory, serviceProvider:global::System.IServiceProvider)
-}
-class Globals <<sealed>> <<partial>> {
-}
-class ThisRibbonCollection <<sealed>> <<partial>> {
-}
-@enduml

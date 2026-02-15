@@ -1,9 +1,0 @@
-@startuml
-class DryRunTests {
-    + DryRun_ShouldNotRename_ExcelFile() : void
-    + DryRun_ShouldNotRename_PdfFile() : void
-    + DryRun_ShouldNotDeleteExistingDestination() : void
-    + DryRun_ShouldStillMatchPdf_ButNotRename() : void
-    + DryRun_ShouldNotThrow_WhenNoPdfMatches() : void
-}
-@enduml

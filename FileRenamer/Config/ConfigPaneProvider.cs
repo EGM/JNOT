@@ -1,9 +1,9 @@
-using JNOT.FileRenamer.Config;
-using JNOT.Shared.Config.IO;
-using JNOT.Shared.Config.Migration;
-using JNOT.Shared.Config.Models;
-using JNOT.Shared.Config.Services;
-using JNOT.Shared.UI;
+﻿using Jnot.FileRenamer.Config;
+using Jnot.Shared.Config.IO;
+using Jnot.Shared.Config.Migration;
+using Jnot.Shared.Config.Models;
+using Jnot.Shared.Config.Services;
+using Jnot.Shared.UI;
 using System;
 using System.Threading.Tasks;
 using System.Windows.Forms;

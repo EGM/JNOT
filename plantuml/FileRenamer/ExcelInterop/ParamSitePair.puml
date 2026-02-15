@@ -1,7 +1,0 @@
-@startuml
-class ParamSitePair {
-    + Parameter : string <<get>>
-    + SiteId : string <<get>>
-    + ParamSitePair(parameter:string, siteId:string)
-}
-@enduml

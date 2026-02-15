@@ -1,6 +1,0 @@
-@startuml
-class ConfigMigrationEngine {
-    + ConfigMigrationEngine(steps:IEnumerable<IConfigMigrationStep>?)
-    + MigrateIfNeeded(config:RootConfig) : void
-}
-@enduml

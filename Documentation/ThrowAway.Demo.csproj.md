@@ -1,0 +1,18 @@
+# ThrowAway.Demo.csproj
+
+```xml
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0-windows10.0.17763.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWindowsForms>true</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AssemblyName>Jnot.$(MSBuildProjectName)</AssemblyName>
+    <RootNamespace>Jnot.$(MSBuildProjectName.Replace(" ", "_"))</RootNamespace>
+	<LangVersion>10.0</LangVersion>
+  </PropertyGroup>
+
+</Project>
+
+```

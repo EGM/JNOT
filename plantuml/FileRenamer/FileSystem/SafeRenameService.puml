@@ -1,6 +1,0 @@
-@startuml
-class SafeRenameService {
-    + Rename(sourcePath:string, destPath:string, dryRun:bool) : void
-    + RenamePdfIfExists(sourceXlsx:string, destXlsx:string, dryRun:bool) : void
-}
-@enduml

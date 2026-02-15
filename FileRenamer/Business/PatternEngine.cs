@@ -1,8 +1,8 @@
-using JNOT.FileRenamer.ExcelInterop;
+﻿using Jnot.Excel.Interop;
 using System.Linq;
 using Tomlyn;
 
-namespace JNOT.FileRenamer.Business
+namespace Jnot.FileRenamer.Business
 {
     public class PatternEngine
     {

@@ -1,6 +1,6 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-namespace JNOT.FileRenamer.Business
+namespace Jnot.FileRenamer.Business
 {
     public class Pattern
     {

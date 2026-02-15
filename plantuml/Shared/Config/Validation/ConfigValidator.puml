@@ -1,5 +1,0 @@
-@startuml
-class ConfigValidator <<static>> {
-    + {static} Validate(config:RootConfig) : ConfigValidationResult
-}
-@enduml

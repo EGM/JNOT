@@ -1,5 +1,0 @@
-@startuml
-class UnitTest1 {
-    + Test1() : void
-}
-@enduml

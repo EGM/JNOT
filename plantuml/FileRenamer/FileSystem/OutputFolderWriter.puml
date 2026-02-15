@@ -1,5 +1,0 @@
-@startuml
-class OutputFolderWriter {
-    + BuildOutputPath(outputFolder:string, finalName:string) : string
-}
-@enduml

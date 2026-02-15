@@ -1,10 +1,10 @@
-using JNOT.FileRenamer.ExcelInterop;
-using JNOT.FileRenamer.FileSystem;
+﻿using Jnot.Excel.Interop;
+using Jnot.FileRenamer.FileSystem;
 using System;
 using System.IO;
 using System.Linq;
 
-namespace JNOT.FileRenamer.Business
+namespace Jnot.FileRenamer.Business
 {
     public class RenameEngine
     {

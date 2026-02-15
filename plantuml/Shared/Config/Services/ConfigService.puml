@@ -1,9 +1,0 @@
-@startuml
-class ConfigService {
-    + ConfigService(loader:ConfigLoader, writer:ConfigWriter)
-    + Load() : RootConfig
-    + LoadOrCreate() : RootConfig
-    + Save(config:RootConfig) : void
-}
-IConfigService <|-- ConfigService
-@enduml

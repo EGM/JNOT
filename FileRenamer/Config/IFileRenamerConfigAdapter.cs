@@ -1,6 +1,6 @@
-using JNOT.Shared.Config.Models;
+﻿using Jnot.Shared.Config.Models;
 
-namespace JNOT.FileRenamer.Config;
+namespace Jnot.FileRenamer.Config;
 
 public interface IFileRenamerConfigAdapter
 {

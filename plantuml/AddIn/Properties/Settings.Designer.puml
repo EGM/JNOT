@@ -1,5 +1,0 @@
-@startuml
-class Settings <<sealed>> <<partial>> {
-}
-Settings --> "Default" Settings
-@enduml

@@ -1,6 +1,0 @@
-@startuml
-class ConfigServiceTests {
-    + LoadOrCreate_ReturnsConfig() : void
-    + Save_ThrowsOnInvalidConfig() : void
-}
-@enduml

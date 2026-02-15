@@ -1,9 +1,0 @@
-@startuml
-class FileRenamerConfig {
-    + InputFolder : string <<get>> <<set>> = ""
-    + OutputFolder : string <<get>> <<set>> = ""
-    + Debug : bool <<get>> <<set>> = false
-    + DryRun : bool <<get>> <<set>> = false
-    + ClearOnRun : bool <<get>> <<set>> = true
-}
-@enduml

@@ -1,5 +1,0 @@
-@startuml
-class InputFolderScanner {
-    + Scan(inputFolder:string) : List<string>
-}
-@enduml

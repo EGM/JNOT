@@ -1,8 +1,0 @@
-@startuml
-class TempFile <<sealed>> {
-    + Path : string <<get>>
-    + TempFile()
-    + Dispose() : void
-}
-IDisposable <|-- TempFile
-@enduml

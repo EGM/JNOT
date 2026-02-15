@@ -1,9 +1,0 @@
-@startuml
-class FileRenamerPaneProvider {
-    + Title : string <<get>>
-    + Status : string <<get>>
-    + FileRenamerPaneProvider(configAdapter:IFileRenamerConfigAdapter, logger:Logger)
-    + PopulateAsync(panel:Panel) : Task
-}
-ITaskPaneContentProvider <|-- FileRenamerPaneProvider
-@enduml

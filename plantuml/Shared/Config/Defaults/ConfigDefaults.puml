@@ -1,6 +1,0 @@
-@startuml
-class ConfigDefaults <<static>> {
-    + <<const>> CurrentVersion : string = "1.0"
-    + {static} ApplyDefaults(config:RootConfig) : void
-}
-@enduml

@@ -1,18 +1,18 @@
-using JNOT.FileRenamer.Business;
-using JNOT.FileRenamer.Config;
-using JNOT.FileRenamer.ExcelInterop;
-using JNOT.FileRenamer.FileSystem;
-using JNOT.FileRenamer.Logging;
-using JNOT.Shared.Config.Models;
-using JNOT.Shared.UI;
+﻿using Jnot.FileRenamer.Business;
+using Jnot.FileRenamer.Config;
+using Jnot.Excel.Interop;
+using Jnot.FileRenamer.FileSystem;
+using Jnot.FileRenamer.Logging;
+using Jnot.Shared.Config.Models;
+using Jnot.Shared.UI;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using JNOT.Shared.UI.Panels;
-using JNOT.Shared.UI.Controls;
+using Jnot.Shared.UI.Panels;
+using Jnot.Shared.UI.Controls;
 
-namespace JNOT.FileRenamer.UI
+namespace Jnot.FileRenamer.UI
 {
     public class FileRenamerPaneProvider : ITaskPaneContentProvider
     {

@@ -1,9 +1,0 @@
-@startuml
-class OutputPanel {
-    + ClearOnRun : bool <<get>> <<set>> = true
-    + OutputPanel()
-    + PrepareForRun() : void
-}
-UserControl <|-- OutputPanel
-OutputPanel --> "Output" JnotRichOutputBox
-@enduml

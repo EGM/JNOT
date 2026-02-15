@@ -1,9 +1,0 @@
-@startuml
-class RenameEngine {
-    + RenameEngine(patternEngine:PatternEngine, renameService:SafeRenameService)
-    + BuildFinalName(data:PivotData) : string
-    + Rename(sourcePath:string, destPath:string, data:PivotData, jobNumber:string, typeCode:string, pdfInputFolder:string, pdfOutputFolder:string, dryRun:bool) : void
-    + BuildFinalPdfName(data:PivotData, jobNumber:string, typeCode:string) : string
-    + RenamePdfIfExists(folder:string, data:PivotData, jobNumber:string, typeCode:string, dryRun:bool) : string?
-}
-@enduml

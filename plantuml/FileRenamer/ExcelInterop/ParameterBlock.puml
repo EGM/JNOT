@@ -1,5 +1,0 @@
-@startuml
-class ParameterBlock {
-    + {static} Parse(grid:string[,], headerRow:int, siteIds:string[]) : List<PivotPair>
-}
-@enduml

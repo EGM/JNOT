@@ -1,7 +1,0 @@
-@startuml
-class CardSection {
-    + CardSection(title:string)
-    + Add(c:Control) : void
-}
-Panel <|-- CardSection
-@enduml
