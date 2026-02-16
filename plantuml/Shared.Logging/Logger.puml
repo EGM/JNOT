@@ -1,0 +1,6 @@
+@startuml
+class Logger {
+    + Logger(outputFolder:string)
+    + Log(message:string) : void
+}
+@enduml

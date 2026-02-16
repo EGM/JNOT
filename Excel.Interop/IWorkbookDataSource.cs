@@ -9,9 +9,9 @@ namespace Jnot.Excel.Interop
 {
     public interface IWorkbookDataSource
     {
-        PivotData GetPivotData();
-        IEnumerable<ParameterBlock> GetParameters();
-        HeaderBlock GetHeader();
+        //PivotData GetPivotData();
+        //IEnumerable<ParameterBlock> GetParameters();
+        //HeaderBlock GetHeader();
         //WorkbookMetadata GetMetadata();
     }
 }

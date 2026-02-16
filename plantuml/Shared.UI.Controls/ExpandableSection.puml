@@ -1,0 +1,6 @@
+@startuml
+class ExpandableSection <<partial>> {
+    + ExpandableSection()
+}
+UserControl <|-- ExpandableSection
+@enduml

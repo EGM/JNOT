@@ -1,0 +1,7 @@
+@startuml
+class HeaderBlock {
+    + SampleDate : string <<get>>
+    + JobNumber : string <<get>>
+    + {static} Parse(grid:string[,], headerRow:int) : HeaderBlock
+}
+@enduml

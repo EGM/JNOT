@@ -22,7 +22,6 @@ packages/
 ## Office / VSTO add-in artifacts
 *.vsto
 *.manifest
-# *.addin
 *.pdb
 *.cache
 *.db

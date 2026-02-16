@@ -1,5 +1,5 @@
 ﻿using Jnot.Excel.Interop;
-using Jnot.FileRenamer.FileSystem;
+using Jnot.Shared.FileSystem;
 using System;
 using System.IO;
 using System.Linq;

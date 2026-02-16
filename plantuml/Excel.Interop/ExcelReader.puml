@@ -1,0 +1,5 @@
+@startuml
+class ExcelReader {
+    + ReadPivot(filePath:string) : PivotData
+}
+@enduml

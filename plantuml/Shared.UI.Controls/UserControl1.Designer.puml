@@ -1,0 +1,4 @@
+@startuml
+class UserControl1 <<partial>> {
+}
+@enduml

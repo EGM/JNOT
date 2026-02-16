@@ -15,7 +15,9 @@
   <ItemGroup>
     <ProjectReference Include="..\Excel.Interop\Excel.Interop.csproj" />
     <ProjectReference Include="..\Shared.Config\Shared.Config.csproj" />
+    <ProjectReference Include="..\Shared.FileSystem\Shared.FileSystem.csproj" />
     <ProjectReference Include="..\Shared.Info\Shared.Info.csproj" />
+    <ProjectReference Include="..\Shared.Logging\Shared.Logging.csproj" />
     <ProjectReference Include="..\Shared.UI.Controls\Shared.UI.Controls.csproj" />
     <ProjectReference Include="..\Shared.UI\Shared.UI.csproj" />
   </ItemGroup>

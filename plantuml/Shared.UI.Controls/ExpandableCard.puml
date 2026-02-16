@@ -1,0 +1,10 @@
+@startuml
+class ExpandableCard <<partial>> {
+    +  <<event>> ExpandedChanged : EventHandler<bool> 
+    + ExpandableCard()
+    + HeaderText : string <<get>> <<set>>
+    + IsExpanded : bool <<get>> <<set>>
+}
+UserControl <|-- ExpandableCard
+ExpandableCard --> "Content" Control
+@enduml

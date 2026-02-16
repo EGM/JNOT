@@ -1,0 +1,5 @@
+@startuml
+class ExcelWorkbookDataSource {
+}
+IWorkbookDataSource <|-- ExcelWorkbookDataSource
+@enduml

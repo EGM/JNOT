@@ -1,0 +1,7 @@
+@startuml
+class FileRenamerConfigAdapter {
+    + FileRenamerConfigAdapter(configService:IConfigService)
+    + GetConfig() : FileRenamerConfig
+}
+IFileRenamerConfigAdapter <|-- FileRenamerConfigAdapter
+@enduml

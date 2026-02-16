@@ -1,0 +1,21 @@
+@startuml
+class JnotRichOutputBox {
+    + ShowTimestamps : bool <<get>> <<set>> = true
+    + JnotRichOutputBox()
+    + <<new>> AppendText(text:string) : void
+    + AppendLine(text:string) : void
+    + AppendInfo(message:string) : void
+    + AppendSuccess(message:string) : void
+    + AppendWarning(message:string) : void
+    + AppendError(message:string) : void
+    + AppendDebug(message:string) : void
+    + AppendLine(message:string, level:JnotLogLevel) : void
+}
+RichTextBox <|-- JnotRichOutputBox
+JnotRichOutputBox o-> "MinVisibleLevel" JnotLogLevel
+JnotRichOutputBox o-> "InfoColor" Color
+JnotRichOutputBox o-> "SuccessColor" Color
+JnotRichOutputBox o-> "WarningColor" Color
+JnotRichOutputBox o-> "ErrorColor" Color
+JnotRichOutputBox o-> "DebugColor" Color
+@enduml

@@ -1,0 +1,4 @@
+@startuml ExpandableCard.Designer
+class ExpandableCard <<partial>> {
+}
+@enduml

@@ -1,0 +1,7 @@
+@startuml
+class CollapsibleSection {
+    + CollapsibleSection(title:string)
+    + Add(control:Control) : void
+}
+Panel <|-- CollapsibleSection
+@enduml

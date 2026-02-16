@@ -1,0 +1,12 @@
+@startuml
+class Pattern {
+    + TypeCode : string <<get>> <<set>>
+    + RequiredSiteCount : int? <<get>> <<set>>
+    + RequiredParameterCount : int? <<get>> <<set>>
+}
+class "List`1"<T> {
+}
+Pattern o-> "RequiredSites<string>" "List`1"
+Pattern o-> "RequiredParameters<string>" "List`1"
+Pattern o-> "RequiredPairs<(string Parameter, string SiteId)>" "List`1"
+@enduml

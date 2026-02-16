@@ -1,0 +1,5 @@
+@startuml
+class ConfigFileLocator <<static>> {
+    + {static} GetConfigPath() : string
+}
+@enduml

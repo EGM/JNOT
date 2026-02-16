@@ -15,7 +15,7 @@ namespace Jnot.Shared.UI.Controls
         private bool _hover;
         private bool _pressed;
 
-        private Timer _animationTimer;
+        private System.Windows.Forms.Timer _animationTimer;
         private int _animationStartHeight;
         private int _animationTargetHeight;
         private DateTime _animationStartTime;
@@ -188,7 +188,7 @@ namespace Jnot.Shared.UI.Controls
             _animationTargetHeight = _isExpanded ? GetContentHeight() : 0;
             _animationStartTime = DateTime.Now;
 
-            _animationTimer = new Timer { Interval = 15 };
+            _animationTimer = new System.Windows.Forms.Timer { Interval = 15 };
             _animationTimer.Tick += AnimationTick;
             _animationTimer.Start();
         }
